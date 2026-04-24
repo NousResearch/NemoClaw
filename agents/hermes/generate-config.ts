@@ -23,6 +23,12 @@ const TOKEN_ENV: Record<string, string> = {
   slack: "SLACK_BOT_TOKEN",
 };
 
+const ALLOWED_USERS_ENV: Record<string, string> = {
+  telegram: "TELEGRAM_ALLOWED_USERS",
+  discord: "DISCORD_ALLOWED_USERS",
+  slack: "SLACK_ALLOWED_USERS",
+};
+
 function main(): void {
   const model = process.env.NEMOCLAW_MODEL!;
   const baseUrl = process.env.NEMOCLAW_INFERENCE_BASE_URL!;
@@ -30,15 +36,13 @@ function main(): void {
   const channelsB64 = process.env.NEMOCLAW_MESSAGING_CHANNELS_B64 || "W10=";
   const allowedIdsB64 = process.env.NEMOCLAW_MESSAGING_ALLOWED_IDS_B64 || "e30=";
 
-  const msgChannels: string[] = JSON.parse(
-    Buffer.from(channelsB64, "base64").toString("utf-8"),
-  );
+  const msgChannels: string[] = JSON.parse(Buffer.from(channelsB64, "base64").toString("utf-8"));
   const allowedIds: Record<string, (string | number)[]> = JSON.parse(
     Buffer.from(allowedIdsB64, "base64").toString("utf-8"),
   );
 
   const config: Record<string, unknown> = {
-    _config_version: 12,
+    _config_version: 22,
     model: {
       default: model,
       provider: "custom",
@@ -74,7 +78,9 @@ function main(): void {
         token: `openshell:resolve:env:${TOKEN_ENV[ch]}`,
       };
       if (ch in allowedIds && allowedIds[ch]?.length) {
-        pCfg.allowed_users = allowedIds[ch].map(String).join(",");
+        pCfg.extra = {
+          allowed_users: allowedIds[ch].map(String).join(","),
+        };
       }
       platformsConfig[ch] = pCfg;
     }
@@ -103,13 +109,19 @@ function main(): void {
   chmodSync(configPath, 0o600);
 
   // Write .env — API server config and messaging token placeholders
-  const envLines: string[] = [
-    "API_SERVER_PORT=18642",
-    "API_SERVER_HOST=127.0.0.1",
-  ];
+  const envLines: string[] = ["API_SERVER_PORT=18642", "API_SERVER_HOST=127.0.0.1"];
   for (const ch of msgChannels) {
     if (ch in TOKEN_ENV) {
       envLines.push(`${TOKEN_ENV[ch]}=openshell:resolve:env:${TOKEN_ENV[ch]}`);
+    }
+    if (ch in ALLOWED_USERS_ENV && allowedIds[ch]?.length) {
+      const allowed = allowedIds[ch].map(String).join(",");
+      envLines.push(`${ALLOWED_USERS_ENV[ch]}=${allowed}`);
+      if (ch === "telegram") {
+        const homeChannel = allowedIds[ch][0];
+        envLines.push(`TELEGRAM_HOME_CHANNEL=${String(homeChannel)}`);
+        envLines.push("TELEGRAM_HOME_CHANNEL_NAME=NemoHermes DM");
+      }
     }
   }
 
@@ -142,7 +154,12 @@ function toYaml(obj: Record<string, unknown>, indent: number = 0): string {
 
 /** Quote a YAML string if it contains special characters. */
 function yamlString(s: string): string {
-  if (/[:{}\[\],&*?|>!%@`#'"]/.test(s) || s.includes("\n") || s.trim() !== s) {
+  if (
+    /[:{}\[\],&*?|>!%@`#'"]/.test(s) ||
+    s.includes("\n") ||
+    s.trim() !== s ||
+    /^(?:[-+]?\d+(?:\.\d+)?|true|false|null|~)$/i.test(s)
+  ) {
     return JSON.stringify(s);
   }
   return s;
