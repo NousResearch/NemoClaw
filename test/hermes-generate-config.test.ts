@@ -68,4 +68,91 @@ describe("Hermes config generation", () => {
       fs.rmSync(tmpHome, { recursive: true, force: true });
     }
   });
+
+  // Provider mapping cases — NEMOCLAW_PROVIDER_KEY drives both the
+  // Hermes-side model.provider value and the credential placeholder
+  // emitted to .env.
+  type ProviderCase = {
+    label: string;
+    providerKey: string;
+    inferenceBaseUrl: string;
+    expectedProvider: string;
+    expectedEnvKeyLine: string | null;
+    forbiddenEnvKeys?: string[];
+  };
+
+  const providerCases: ProviderCase[] = [
+    {
+      label: "anthropic-prod (and compatible-anthropic-endpoint)",
+      providerKey: "anthropic",
+      inferenceBaseUrl: "https://inference.local",
+      expectedProvider: "anthropic",
+      expectedEnvKeyLine: "ANTHROPIC_API_KEY=openshell:resolve:env:ANTHROPIC_API_KEY",
+      forbiddenEnvKeys: ["OPENAI_API_KEY"],
+    },
+    {
+      label: "openai-api",
+      providerKey: "openai",
+      inferenceBaseUrl: "https://inference.local/v1",
+      expectedProvider: "openai",
+      expectedEnvKeyLine: "OPENAI_API_KEY=openshell:resolve:env:OPENAI_API_KEY",
+      forbiddenEnvKeys: ["ANTHROPIC_API_KEY"],
+    },
+    {
+      label: "inference (gemini / nvidia / compatible-endpoint)",
+      providerKey: "inference",
+      inferenceBaseUrl: "https://inference.local/v1",
+      expectedProvider: "custom",
+      expectedEnvKeyLine: null,
+      forbiddenEnvKeys: ["ANTHROPIC_API_KEY", "OPENAI_API_KEY"],
+    },
+    {
+      label: "legacy/default custom",
+      providerKey: "custom",
+      inferenceBaseUrl: "https://inference.local/v1",
+      expectedProvider: "custom",
+      expectedEnvKeyLine: null,
+      forbiddenEnvKeys: ["ANTHROPIC_API_KEY", "OPENAI_API_KEY"],
+    },
+  ];
+
+  for (const tc of providerCases) {
+    it(`maps NEMOCLAW_PROVIDER_KEY=${tc.providerKey} (${tc.label})`, () => {
+      const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), "nemoclaw-hermes-config-"));
+      const hermesDir = path.join(tmpHome, ".hermes");
+      fs.mkdirSync(hermesDir, { recursive: true });
+
+      try {
+        const result = spawnSync("node", ["--experimental-strip-types", SCRIPT], {
+          encoding: "utf8",
+          env: {
+            ...process.env,
+            HOME: tmpHome,
+            NEMOCLAW_MODEL: "claude-opus-4-7",
+            NEMOCLAW_PROVIDER_KEY: tc.providerKey,
+            NEMOCLAW_INFERENCE_BASE_URL: tc.inferenceBaseUrl,
+          },
+        });
+
+        expect(result.status).toBe(0);
+
+        const configRaw = fs.readFileSync(path.join(hermesDir, "config.yaml"), "utf8");
+        const config = YAML.parse(configRaw) as {
+          model: { provider: string; default: string; base_url: string };
+        };
+        expect(config.model.provider).toBe(tc.expectedProvider);
+        expect(config.model.base_url).toBe(tc.inferenceBaseUrl);
+
+        const envRaw = fs.readFileSync(path.join(hermesDir, ".env"), "utf8");
+        if (tc.expectedEnvKeyLine) {
+          expect(envRaw).toContain(tc.expectedEnvKeyLine);
+        }
+        for (const forbidden of tc.forbiddenEnvKeys ?? []) {
+          expect(envRaw).not.toContain(`${forbidden}=`);
+        }
+      } finally {
+        fs.rmSync(tmpHome, { recursive: true, force: true });
+      }
+    });
+  }
 });

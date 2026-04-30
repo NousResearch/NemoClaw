@@ -37,6 +37,33 @@ process:
   run_as_group: sandbox
 
 network_policies:
+  # ── Managed inference — primary egress path for the agent ─────
+  # All Hermes inference traffic goes through inference.local, the
+  # OpenShell gateway's virtual provider router. OpenShell terminates
+  # TLS, swaps in the host-side credential for whichever provider
+  # was selected during onboard (Anthropic / OpenAI / Gemini /
+  # NVIDIA Endpoints / custom OpenAI-compatible / custom
+  # Anthropic-compatible / Ollama / vLLM / NIM), and forwards.
+  # This single policy entry covers every supported provider —
+  # Hermes never directly contacts a provider host while running
+  # under NemoClaw.
+  managed_inference:
+    name: managed_inference
+    endpoints:
+      - host: inference.local
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        rules:
+          - allow: { method: GET, path: "/**" }
+          - allow: { method: POST, path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/hermes }
+      - { path: /usr/bin/python3 }
+      - { path: /usr/bin/python3.11 }
+      - { path: /usr/bin/curl }
+      - { path: /usr/local/bin/curl }
+
   claude_code:
     name: claude_code
     endpoints:

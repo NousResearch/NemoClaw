@@ -29,9 +29,54 @@ const ALLOWED_USERS_ENV: Record<string, string> = {
   slack: "SLACK_ALLOWED_USERS",
 };
 
+/**
+ * Per-provider API key env-var names. Hermes's provider adapters
+ * (anthropic_adapter.py, openai client, etc.) read these from the
+ * process environment before sending a request — they short-circuit
+ * with an "in-process credentials missing" error if the env var is
+ * empty, *even when* the actual outbound call is going to be
+ * substituted by OpenShell's L7 proxy.
+ *
+ * We satisfy the in-process check by writing an OpenShell resolve
+ * placeholder. The proxy rewrites the real header value at egress
+ * (verified empirically: any non-empty x-api-key works because the
+ * proxy overrides it). The placeholder string `openshell:resolve:env:X`
+ * is the same pattern OpenShell uses for messaging tokens.
+ */
+const PROVIDER_API_KEY_ENV: Record<string, string> = {
+  anthropic: "ANTHROPIC_API_KEY",
+  openai: "OPENAI_API_KEY",
+  // "custom"/"inference" providers don't have a fixed credential env var
+  // in Hermes — those flows expect either no key (handled by proxy) or
+  // a per-user override via .env. No emission needed by default.
+};
+
+/**
+ * Map NemoClaw's provider key (from getSandboxInferenceConfig in
+ * src/lib/onboard-providers.ts) to the Hermes-side provider value
+ * accepted in config.yaml's `model.provider` field.
+ *
+ * Hermes recognises a small set of provider names; "custom" means
+ * "generic OpenAI-compatible endpoint" which is the right behaviour
+ * for everything that isn't Anthropic-Messages-shaped.
+ */
+function mapProvider(providerKey: string): string {
+  switch (providerKey) {
+    case "anthropic":
+      return "anthropic";
+    case "openai":
+      return "openai";
+    case "inference":
+    case "custom":
+    default:
+      return "custom";
+  }
+}
+
 function main(): void {
   const model = process.env.NEMOCLAW_MODEL!;
   const baseUrl = process.env.NEMOCLAW_INFERENCE_BASE_URL!;
+  const providerKey = (process.env.NEMOCLAW_PROVIDER_KEY ?? "custom").trim();
 
   const channelsB64 = process.env.NEMOCLAW_MESSAGING_CHANNELS_B64 || "W10=";
   const allowedIdsB64 = process.env.NEMOCLAW_MESSAGING_ALLOWED_IDS_B64 || "e30=";
@@ -41,11 +86,30 @@ function main(): void {
     Buffer.from(allowedIdsB64, "base64").toString("utf-8"),
   );
 
+  // Map NemoClaw's provider key (set by onboard.ts via getSandboxInferenceConfig)
+  // to the Hermes-side provider name in config.yaml. The key values come from
+  // src/lib/onboard-providers.ts:
+  //   "anthropic" — anthropic-prod / compatible-anthropic-endpoint
+  //   "openai"    — openai-api
+  //   "inference" — gemini-api / nvidia-prod / nvidia-nim / compatible-endpoint
+  //                 (everything that ends up routed as OpenAI-compatible
+  //                 through the inference.local proxy)
+  //   "custom"    — legacy/fallback default; treated as OpenAI-compatible
+  //
+  // Hermes accepts these provider names natively (see hermes_cli/web_server.py):
+  //   "anthropic" — Anthropic Messages API (POST /v1/messages)
+  //   "openai"    — OpenAI Chat Completions
+  //   "custom"    — generic OpenAI-compatible endpoint
+  //
+  // Without this mapping, Hermes would always speak OpenAI-format to the
+  // proxy, which fails for any Anthropic-routed sandbox.
+  const hermesProvider = mapProvider(providerKey);
+
   const config: Record<string, unknown> = {
     _config_version: 22,
     model: {
       default: model,
-      provider: "custom",
+      provider: hermesProvider,
       base_url: baseUrl,
     },
     terminal: {
@@ -108,8 +172,17 @@ function main(): void {
   writeFileSync(configPath, toYaml(config));
   chmodSync(configPath, 0o600);
 
-  // Write .env — API server config and messaging token placeholders
+  // Write .env — API server config, provider credential placeholder
+  // (so Hermes's in-process credential checks pass; the OpenShell L7
+  // proxy substitutes the real value on egress), and messaging token
+  // placeholders.
   const envLines: string[] = ["API_SERVER_PORT=18642", "API_SERVER_HOST=127.0.0.1"];
+
+  const providerCredEnv = PROVIDER_API_KEY_ENV[providerKey];
+  if (providerCredEnv) {
+    envLines.push(`${providerCredEnv}=openshell:resolve:env:${providerCredEnv}`);
+  }
+
   for (const ch of msgChannels) {
     if (ch in TOKEN_ENV) {
       envLines.push(`${TOKEN_ENV[ch]}=openshell:resolve:env:${TOKEN_ENV[ch]}`);
