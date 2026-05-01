@@ -93,8 +93,12 @@ RUN mkdir -p /sandbox/.hermes-data/memories \
 # Hermes is not on PyPI — official install is via their install script or
 # direct pip install from the release tarball.
 # hadolint ignore=DL3013
-RUN pip3 install --no-cache-dir --break-system-packages \
-        "hermes-agent @ https://github.com/NousResearch/hermes-agent/archive/refs/tags/${HERMES_VERSION}.tar.gz" \
-        "pyyaml==6.0.3" \
-        "python-telegram-bot>=21.0" \
-    && hermes --version
+RUN pip3 install --no-cache-dir --break-system-packages uv
+RUN mkdir /opt/hermes && curl -L https://github.com/NousResearch/hermes-agent/archive/refs/tags/${HERMES_VERSION}.tar.gz | tar -xz -C /opt/hermes --strip-components=1
+WORKDIR /opt/hermes
+RUN uv venv && \
+    uv pip install --no-cache-dir -e ".[all]" && \
+    npm install --prefer-offline --no-audit
+
+ENV PATH="/opt/hermes/.venv/bin:${PATH}"
+RUN hermes --version
