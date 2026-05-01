@@ -1,0 +1,2166 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Security Best Practices &#8212; NVIDIA NemoClaw Developer Guide</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=ef2c6a0b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+
+
+    <script src="../_static/documentation_options.js?v=349eaea7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=6dbb43f8"></script>
+    <script src="../_static/search-assets.bundle.js?v=099b119e"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'security/best-practices';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.0.29';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+
+    <link rel="canonical" href="https://docs.nvidia.com/nemoclaw/latest/security/best-practices.html" />
+    <link rel="icon" href="../_static/favicon.png"/>
+
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Credential Storage" href="credential-storage.html" />
+    <link rel="prev" title="Customize the Sandbox Network Policy" href="../network-policy/customize-network-policy.html" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+
+
+<script src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js"></script>
+
+  </head>
+
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">&#x1F514; NVIDIA NemoClaw is <strong>alpha software</strong>. APIs and behavior may change without notice. Do not use in production.</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+  
+  
+    <p class="title logo__title">NVIDIA NemoClaw Developer Guide</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/NVIDIA/NemoClaw" title="NemoClaw GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/XFpfPv9Uvx" title="NemoClaw Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+  
+  
+    <p class="title logo__title">NVIDIA NemoClaw Developer Guide</p>
+  
+</a>
+
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/NVIDIA/NemoClaw" title="NemoClaw GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/XFpfPv9Uvx" title="NemoClaw Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Table of Contents">
+  <p class="bd-links__title" role="heading" aria-level="1">Table of Contents</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/how-it-works.html">How It Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/release-notes.html">Release Notes</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../get-started/prerequisites.html">Prerequisites</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../get-started/windows-preparation.html">Prepare Windows for NemoClaw</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../get-started/quickstart.html">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../inference/inference-options.html">Inference Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/use-local-inference.html">Use Local Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/switch-inference-providers.html">Switch Inference Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/set-up-sub-agent.html">Set Up Task-Specific Sub-Agents</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Network Policy</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../network-policy/approve-network-requests.html">Approve or Deny Network Requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network-policy/customize-network-policy.html">Customize the Network Policy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Security</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Security Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credential-storage.html">Credential Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openclaw-controls.html">OpenClaw Controls</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deployment/deploy-to-remote-gpu.html">Deploy to a Remote GPU Instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/install-openclaw-plugins.html">Install OpenClaw Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../workspace/workspace-files.html">Workspace Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Backup &amp; Restore</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/network-policies.html">Network Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../resources/agent-skills.html">Agent Skills</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md">Report Vulnerabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/license.html">License</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/XFpfPv9Uvx">Discord</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Security Best Practices</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!--
+  SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+-->
+<section class="tex2jax_ignore mathjax_ignore" id="security-best-practices">
+<h1>Security Best Practices<a class="headerlink" href="#security-best-practices" title="Link to this heading">#</a></h1>
+<p>NemoClaw ships with deny-by-default security controls across four layers: network, filesystem, process, and inference.
+You can tune every control, but each change shifts the risk profile.
+This page documents every configurable knob, its default, what it protects, the concrete risk of relaxing it, and a recommendation for common use cases.</p>
+<p>For background on how the layers fit together, refer to <a class="reference internal" href="../about/how-it-works.html"><span class="std std-doc">How It Works</span></a>.</p>
+<!-- TODO: uncomment after the OpenShell docs are published
+:::{seealso}
+OpenShell enforces the platform-level mechanisms that NemoClaw configures, including network namespace isolation, seccomp filters, SSRF protection, TLS termination, and gateway authentication.
+For the full platform-level controls reference, see [OpenShell Security Best Practices](https://docs.nvidia.com/openshell/latest/security/best-practices.html).
+:::
+-->
+<section id="protection-layers-at-a-glance">
+<h2>Protection Layers at a Glance<a class="headerlink" href="#protection-layers-at-a-glance" title="Link to this heading">#</a></h2>
+<p>NemoClaw enforces security at four layers.
+NemoClaw locks some when it creates the sandbox and requires a restart to change them.
+You can hot-reload others while the sandbox runs.</p>
+<p>The following diagram shows the default posture immediately after <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>, before you approve any endpoints or apply any presets.</p>
+<pre  class="mermaid">
+        flowchart TB
+    subgraph HOST[&quot;Your Machine: default posture after nemoclaw onboard&quot;]
+        direction TB
+
+        YOU[&quot;👤 Operator&quot;]
+
+        subgraph NC[&quot;NemoClaw + OpenShell&quot;]
+            direction TB
+
+            subgraph SB[&quot;Sandbox: the agent's isolated world&quot;]
+                direction LR
+                PROC[&quot;⚙️ Process Layer&lt;br/&gt;Controls what the agent can execute&quot;]
+                FS[&quot;📁 Filesystem Layer&lt;br/&gt;Controls what the agent can read and write&quot;]
+                AGENT[&quot;🤖 Agent&quot;]
+            end
+
+            subgraph GW[&quot;Gateway: the gatekeeper&quot;]
+                direction LR
+                NET[&quot;🌐 Network Layer&lt;br/&gt;Controls where the agent can connect&quot;]
+                INF[&quot;🧠 Inference Layer&lt;br/&gt;Controls which AI models the agent can use&quot;]
+            end
+        end
+    end
+
+    OUTSIDE[&quot;🌍 Outside World&lt;br/&gt;Internet · AI Providers · APIs&quot;]
+
+    AGENT -- &quot;all requests&quot; --&gt; GW
+    GW -- &quot;approved only&quot; --&gt; OUTSIDE
+    YOU -. &quot;approve / deny&quot; .-&gt; GW
+
+    classDef agent fill:#76b900,stroke:#5a8f00,color:#fff,stroke-width:2px,font-weight:bold
+    classDef locked fill:#1a1a1a,stroke:#76b900,color:#fff,stroke-width:2px
+    classDef hot fill:#333,stroke:#76b900,color:#e6f2cc,stroke-width:2px
+    classDef external fill:#f5f5f5,stroke:#ccc,color:#1a1a1a,stroke-width:1px
+    classDef operator fill:#fff,stroke:#76b900,color:#1a1a1a,stroke-width:2px,font-weight:bold
+
+    class AGENT agent
+    class PROC,FS locked
+    class NET,INF hot
+    class OUTSIDE external
+    class YOU operator
+
+    style HOST fill:none,stroke:#76b900,stroke-width:2px,color:#1a1a1a
+    style NC fill:none,stroke:#76b900,stroke-width:1px,stroke-dasharray:5 5,color:#1a1a1a
+    style SB fill:#f5faed,stroke:#76b900,stroke-width:2px,color:#1a1a1a
+    style GW fill:#2a2a2a,stroke:#76b900,stroke-width:2px,color:#fff
+    </pre><div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Layer</p></th>
+<th class="head"><p>What it protects</p></th>
+<th class="head"><p>Enforcement point</p></th>
+<th class="head"><p>Changeable at runtime</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Network</p></td>
+<td><p>Unauthorized outbound connections and data exfiltration.</p></td>
+<td><p>OpenShell gateway</p></td>
+<td><p>Yes. Use <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">policy</span> <span class="pre">set</span></code> or operator approval.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Filesystem</p></td>
+<td><p>System binary tampering, credential theft, config manipulation.</p></td>
+<td><p>Landlock LSM + container mounts</p></td>
+<td><p>No. Requires sandbox re-creation.</p></td>
+</tr>
+<tr class="row-even"><td><p>Process</p></td>
+<td><p>Privilege escalation, fork bombs, syscall abuse.</p></td>
+<td><p>Container runtime (Docker/K8s <code class="docutils literal notranslate"><span class="pre">securityContext</span></code>)</p></td>
+<td><p>No. Requires sandbox re-creation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inference</p></td>
+<td><p>Credential exposure, unauthorized model access, cost overruns.</p></td>
+<td><p>OpenShell gateway</p></td>
+<td><p>Yes. Use <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">inference</span> <span class="pre">set</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="network-controls">
+<h2>Network Controls<a class="headerlink" href="#network-controls" title="Link to this heading">#</a></h2>
+<p>NemoClaw controls which hosts, ports, and HTTP methods the sandbox can reach, and lets operators approve or deny requests in real time.</p>
+<!-- OpenShell provides additional network enforcement mechanisms not covered here, including network namespace isolation, SSRF protection, TLS auto-detection and termination, and audit-vs-enforce modes.
+See the [Network Controls](https://docs.nvidia.com/openshell/latest/security/best-practices.html#network-controls) section of the OpenShell Security Best Practices. -->
+<section id="deny-by-default-egress">
+<h3>Deny-by-Default Egress<a class="headerlink" href="#deny-by-default-egress" title="Link to this heading">#</a></h3>
+<p>The sandbox blocks all outbound connections unless you explicitly list the endpoint in the policy file <code class="docutils literal notranslate"><span class="pre">nemoclaw-blueprint/policies/openclaw-sandbox.yaml</span></code>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>All egress denied. Only endpoints in the baseline policy can receive traffic.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add endpoints to the policy file (static) or with <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">policy</span> <span class="pre">set</span></code> (dynamic).</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Each allowed endpoint is a potential data exfiltration path. The agent can send workspace content, credentials, or conversation history to any reachable host.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Add only endpoints the agent needs for its task. Prefer operator approval for one-off requests over permanently widening the baseline.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="binary-scoped-endpoint-rules">
+<h3>Binary-Scoped Endpoint Rules<a class="headerlink" href="#binary-scoped-endpoint-rules" title="Link to this heading">#</a></h3>
+<p>Each network policy entry restricts which executables can reach the endpoint using the <code class="docutils literal notranslate"><span class="pre">binaries</span></code> field.</p>
+<p>OpenShell identifies the calling binary by reading <code class="docutils literal notranslate"><span class="pre">/proc/&lt;pid&gt;/exe</span></code> (the kernel-trusted executable path, not <code class="docutils literal notranslate"><span class="pre">argv[0]</span></code>), walking the process tree for ancestor binaries, and computing a SHA256 hash of each binary on first use.
+If someone replaces a binary while the sandbox runs, the hash mismatch triggers an immediate deny.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Each endpoint restricts access to specific binaries. For example, the <code class="docutils literal notranslate"><span class="pre">github</span></code> preset restricts access so only <code class="docutils literal notranslate"><span class="pre">/usr/bin/gh</span></code> and <code class="docutils literal notranslate"><span class="pre">/usr/bin/git</span></code> can reach <code class="docutils literal notranslate"><span class="pre">github.com</span></code>. Binary paths support glob patterns (<code class="docutils literal notranslate"><span class="pre">*</span></code> matches one path component, <code class="docutils literal notranslate"><span class="pre">**</span></code> matches recursively).</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add binaries to an endpoint entry, or omit the <code class="docutils literal notranslate"><span class="pre">binaries</span></code> field to allow any executable.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Removing binary restrictions lets any process in the sandbox reach the endpoint. An agent could use <code class="docutils literal notranslate"><span class="pre">curl</span></code>, <code class="docutils literal notranslate"><span class="pre">wget</span></code>, or a Python script to exfiltrate data to an allowed host, bypassing the intended usage pattern.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Always scope endpoints to the binaries that need them. If the agent needs a host from a new binary, add that binary explicitly rather than removing the restriction.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="path-scoped-http-rules">
+<h3>Path-Scoped HTTP Rules<a class="headerlink" href="#path-scoped-http-rules" title="Link to this heading">#</a></h3>
+<p>Endpoint rules restrict allowed HTTP methods and URL paths.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Some endpoints allow GET and POST on <code class="docutils literal notranslate"><span class="pre">/**</span></code> (for example, <code class="docutils literal notranslate"><span class="pre">clawhub.ai</span></code>). Others restrict methods and paths to specific API routes (for example, <code class="docutils literal notranslate"><span class="pre">api.anthropic.com</span></code> allows POST only to inference paths). Read-only endpoints such as <code class="docutils literal notranslate"><span class="pre">docs.openclaw.ai</span></code> and <code class="docutils literal notranslate"><span class="pre">sentry.io</span></code> allow GET only. The <code class="docutils literal notranslate"><span class="pre">npm_registry</span></code> baseline entry and the <code class="docutils literal notranslate"><span class="pre">npm</span></code>/<code class="docutils literal notranslate"><span class="pre">pypi</span></code> presets are GET-only (plus HEAD for PyPI).</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add methods (PUT, DELETE, PATCH) or restrict paths to specific prefixes.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Allowing all methods on an API endpoint gives the agent write and delete access. For example, allowing DELETE on <code class="docutils literal notranslate"><span class="pre">api.github.com</span></code> lets the agent delete repositories.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Use GET-only rules for endpoints that the agent only reads. Add write methods only for endpoints where the agent must create or modify resources. Restrict paths to specific API routes when possible.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="l4-only-vs-l7-inspection-protocol-field">
+<h3>L4-Only vs L7 Inspection (<code class="docutils literal notranslate"><span class="pre">protocol</span></code> Field)<a class="headerlink" href="#l4-only-vs-l7-inspection-protocol-field" title="Link to this heading">#</a></h3>
+<p>All sandbox egress goes through OpenShell’s CONNECT proxy.
+The <code class="docutils literal notranslate"><span class="pre">protocol</span></code> field on an endpoint controls whether the proxy also inspects individual HTTP requests inside the tunnel.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Endpoints without a <code class="docutils literal notranslate"><span class="pre">protocol</span></code> field use L4-only enforcement: the proxy checks host, port, and binary identity, then relays the TCP stream without inspecting payloads. Setting <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> enables L7 inspection: the proxy auto-detects and terminates TLS, then evaluates each HTTP request’s method and path against the endpoint’s <code class="docutils literal notranslate"><span class="pre">rules</span></code> or <code class="docutils literal notranslate"><span class="pre">access</span></code> preset.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> to an endpoint to enable per-request HTTP inspection. Use the <code class="docutils literal notranslate"><span class="pre">access</span></code> preset (<code class="docutils literal notranslate"><span class="pre">full</span></code>, <code class="docutils literal notranslate"><span class="pre">read-only</span></code>, <code class="docutils literal notranslate"><span class="pre">read-write</span></code>) or explicit <code class="docutils literal notranslate"><span class="pre">rules</span></code> to control allowed methods and paths.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>L4-only endpoints (no <code class="docutils literal notranslate"><span class="pre">protocol</span></code> field) allow the agent to send any data through the tunnel after the initial connection is permitted. The proxy cannot see or filter the HTTP method, path, or body. The <code class="docutils literal notranslate"><span class="pre">access:</span> <span class="pre">full</span></code> preset with <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> enables inspection but allows all methods and paths, so it does not restrict what the agent can do at the HTTP level.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> with specific <code class="docutils literal notranslate"><span class="pre">rules</span></code> for REST APIs where you want method and path control. Use <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> with <code class="docutils literal notranslate"><span class="pre">access:</span> <span class="pre">read-only</span></code> for read-only endpoints. Omit <code class="docutils literal notranslate"><span class="pre">protocol</span></code> only for non-HTTP protocols (WebSocket, gRPC streaming) or endpoints that do not need HTTP inspection.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="operator-approval-flow">
+<h3>Operator Approval Flow<a class="headerlink" href="#operator-approval-flow" title="Link to this heading">#</a></h3>
+<p>When the agent reaches an unlisted endpoint, OpenShell blocks the request and prompts the operator in the TUI.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Enabled. The gateway blocks all unlisted endpoints and requires approval.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>The system merges approved endpoints into the sandbox’s policy as a new durable revision. They persist across sandbox restarts within the same sandbox instance. However, when you destroy and recreate the sandbox (for example, by running <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>), the policy resets to the baseline defined in the blueprint.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Approving an endpoint permanently widens the running sandbox’s policy. If you approve a broad domain (such as a CDN that hosts arbitrary content), the agent can fetch anything from that domain until you destroy and recreate the sandbox.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Review each blocked request before approving. If you find yourself approving the same endpoint repeatedly, add it to the baseline policy with appropriate binary and path restrictions. To reset approved endpoints, destroy and recreate the sandbox.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="policy-presets">
+<h3>Policy Presets<a class="headerlink" href="#policy-presets" title="Link to this heading">#</a></h3>
+<p>NemoClaw ships preset policy files in <code class="docutils literal notranslate"><span class="pre">nemoclaw-blueprint/policies/presets/</span></code> for common integrations.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Preset</p></th>
+<th class="head"><p>What it enables</p></th>
+<th class="head"><p>Key risk</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">brave</span></code></p></td>
+<td><p>Brave Search API.</p></td>
+<td><p>Agent can issue search queries.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">brew</span></code></p></td>
+<td><p>Homebrew (Linuxbrew) package manager.</p></td>
+<td><p>Allows installing arbitrary Homebrew packages, which may contain malicious code.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">discord</span></code></p></td>
+<td><p>Discord REST API, WebSocket gateway, CDN.</p></td>
+<td><p>CDN endpoint (<code class="docutils literal notranslate"><span class="pre">cdn.discordapp.com</span></code>) allows GET to any path. WebSocket uses <code class="docutils literal notranslate"><span class="pre">access:</span> <span class="pre">full</span></code> (no inspection).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">github</span></code></p></td>
+<td><p>GitHub and GitHub REST API.</p></td>
+<td><p>Gives agent read/write access to repositories and issues via <code class="docutils literal notranslate"><span class="pre">gh</span></code> and <code class="docutils literal notranslate"><span class="pre">git</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">huggingface</span></code></p></td>
+<td><p>Hugging Face Hub (download-only) and inference router.</p></td>
+<td><p>Allows downloading arbitrary models and datasets. POST is restricted to the inference router only.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jira</span></code></p></td>
+<td><p>Atlassian Jira API.</p></td>
+<td><p>Gives agent read/write access to project issues and comments.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">npm</span></code></p></td>
+<td><p>npm and Yarn registries (GET-only).</p></td>
+<td><p>Allows installing arbitrary npm packages, which may contain malicious code. Publishing is blocked.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">outlook</span></code></p></td>
+<td><p>Microsoft 365, Outlook.</p></td>
+<td><p>Gives agent access to email.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pypi</span></code></p></td>
+<td><p>Python Package Index (GET and HEAD only).</p></td>
+<td><p>Allows installing arbitrary Python packages, which may contain malicious code. Publishing is blocked.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">slack</span></code></p></td>
+<td><p>Slack API, Socket Mode, webhooks.</p></td>
+<td><p>WebSocket uses <code class="docutils literal notranslate"><span class="pre">access:</span> <span class="pre">full</span></code>. Agent can post to any channel the bot token has access to.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">telegram</span></code></p></td>
+<td><p>Telegram Bot API.</p></td>
+<td><p>Agent can send messages to any chat the bot token has access to.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Recommendation:</strong> Apply presets only when the agent’s task requires the integration. Review the preset’s YAML file before applying to understand the endpoints, methods, and binary restrictions it adds.</p>
+</section>
+</section>
+<section id="filesystem-controls">
+<h2>Filesystem Controls<a class="headerlink" href="#filesystem-controls" title="Link to this heading">#</a></h2>
+<p>NemoClaw restricts which paths the agent can read and write, protecting system binaries, configuration files, and gateway credentials.</p>
+<!-- OpenShell covers additional filesystem enforcement details, including `hard_requirement` compatibility mode for Landlock and policy path validation rules.
+See the [Filesystem Controls](https://docs.nvidia.com/openshell/latest/security/best-practices.html#filesystem-controls) section of the OpenShell Security Best Practices. -->
+<section id="read-only-system-paths">
+<h3>Read-Only System Paths<a class="headerlink" href="#read-only-system-paths" title="Link to this heading">#</a></h3>
+<p>The container mounts system directories read-only to prevent the agent from modifying binaries, libraries, or configuration files.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/usr</span></code>, <code class="docutils literal notranslate"><span class="pre">/lib</span></code>, <code class="docutils literal notranslate"><span class="pre">/proc</span></code>, <code class="docutils literal notranslate"><span class="pre">/dev/urandom</span></code>, <code class="docutils literal notranslate"><span class="pre">/app</span></code>, <code class="docutils literal notranslate"><span class="pre">/etc</span></code>, <code class="docutils literal notranslate"><span class="pre">/var/log</span></code> are read-only.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add or remove paths in the <code class="docutils literal notranslate"><span class="pre">filesystem_policy.read_only</span></code> section of the policy file.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Making <code class="docutils literal notranslate"><span class="pre">/usr</span></code> or <code class="docutils literal notranslate"><span class="pre">/lib</span></code> writable lets the agent replace system binaries (such as <code class="docutils literal notranslate"><span class="pre">curl</span></code> or <code class="docutils literal notranslate"><span class="pre">node</span></code>) with trojanized versions. Making <code class="docutils literal notranslate"><span class="pre">/etc</span></code> writable lets the agent modify DNS resolution, TLS trust stores, or user accounts.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Never make system paths writable. If the agent needs a writable location for generated files, use a subdirectory of <code class="docutils literal notranslate"><span class="pre">/sandbox</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="read-only-openclaw-config">
+<h3>Read-Only <code class="docutils literal notranslate"><span class="pre">.openclaw</span></code> Config<a class="headerlink" href="#read-only-openclaw-config" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw</span></code> directory contains the OpenClaw gateway configuration, including auth tokens and CORS settings.
+The container mounts it read-only while writable agent state (plugins, agent data) lives in <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw-data</span></code> through symlinks.</p>
+<p>Multiple defense layers protect this directory:</p>
+<ul class="simple">
+<li><p><strong>DAC permissions.</strong> Root owns the directory and <code class="docutils literal notranslate"><span class="pre">openclaw.json</span></code> with <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">444</span></code>, so the sandbox user cannot write to them.</p></li>
+<li><p><strong>Immutable flag.</strong> The entrypoint applies <code class="docutils literal notranslate"><span class="pre">chattr</span> <span class="pre">+i</span></code> to the directory and all symlinks, preventing modification even if other controls fail.</p></li>
+<li><p><strong>Symlink validation.</strong> At startup, the entrypoint verifies every symlink in <code class="docutils literal notranslate"><span class="pre">.openclaw</span></code> points to the expected <code class="docutils literal notranslate"><span class="pre">.openclaw-data</span></code> target. If any symlink points elsewhere, the container refuses to start.</p></li>
+<li><p><strong>Config integrity hash.</strong> The build process pins a SHA256 hash of <code class="docutils literal notranslate"><span class="pre">openclaw.json</span></code>. The entrypoint verifies it at startup and refuses to start if the hash does not match.</p></li>
+</ul>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The container mounts <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw</span></code> as read-only, root-owned, immutable, and integrity-verified at startup. <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw-data</span></code> remains writable.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Move <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw</span></code> from <code class="docutils literal notranslate"><span class="pre">read_only</span></code> to <code class="docutils literal notranslate"><span class="pre">read_write</span></code> in the policy file.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>A writable <code class="docutils literal notranslate"><span class="pre">.openclaw</span></code> directory lets the agent modify its own gateway config: disabling CORS, changing auth tokens, or redirecting inference to an attacker-controlled endpoint. This is the single most dangerous filesystem change.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Never make <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw</span></code> writable.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="writable-paths">
+<h3>Writable Paths<a class="headerlink" href="#writable-paths" title="Link to this heading">#</a></h3>
+<p>The agent has read-write access to <code class="docutils literal notranslate"><span class="pre">/sandbox</span></code>, <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>, and <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">/sandbox</span></code> (agent workspace), <code class="docutils literal notranslate"><span class="pre">/tmp</span></code> (temporary files), <code class="docutils literal notranslate"><span class="pre">/dev/null</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Add additional writable paths in <code class="docutils literal notranslate"><span class="pre">filesystem_policy.read_write</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Each additional writable path expands the agent’s ability to persist data and potentially modify system behavior. Adding <code class="docutils literal notranslate"><span class="pre">/var</span></code> lets the agent write to log directories. Adding <code class="docutils literal notranslate"><span class="pre">/home</span></code> gives access to other user directories.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Keep writable paths to <code class="docutils literal notranslate"><span class="pre">/sandbox</span></code> and <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>. If the agent needs a persistent working directory, create a subdirectory under <code class="docutils literal notranslate"><span class="pre">/sandbox</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="landlock-lsm-enforcement">
+<h3>Landlock LSM Enforcement<a class="headerlink" href="#landlock-lsm-enforcement" title="Link to this heading">#</a></h3>
+<p>Landlock is a Linux Security Module that enforces filesystem access rules at the kernel level.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">compatibility:</span> <span class="pre">best_effort</span></code>. The entrypoint applies Landlock rules when the kernel supports them and silently skips them on older kernels.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is a NemoClaw default, not a user-facing knob.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>On kernels without Landlock support (pre-5.13), filesystem restrictions rely solely on container mount configuration, which is less granular.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Run on a kernel that supports Landlock (5.13+). Ubuntu 22.04 LTS and later include Landlock support.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="process-controls">
+<h2>Process Controls<a class="headerlink" href="#process-controls" title="Link to this heading">#</a></h2>
+<p>NemoClaw limits the capabilities, user privileges, and resource quotas available to processes inside the sandbox.</p>
+<!-- OpenShell enforces additional process-level controls not covered here, including seccomp BPF socket domain filters and a specific enforcement application order (namespace entry, privilege drop, Landlock, seccomp).
+See the [Process Controls](https://docs.nvidia.com/openshell/latest/security/best-practices.html#process-controls) section of the OpenShell Security Best Practices. -->
+<section id="capability-drops">
+<h3>Capability Drops<a class="headerlink" href="#capability-drops" title="Link to this heading">#</a></h3>
+<p>The entrypoint drops dangerous Linux capabilities from the bounding set at startup using <code class="docutils literal notranslate"><span class="pre">capsh</span></code>.
+This limits what capabilities any child process (gateway, sandbox, agent) can ever acquire.</p>
+<p>The entrypoint drops these capabilities: <code class="docutils literal notranslate"><span class="pre">cap_net_raw</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_dac_override</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_sys_chroot</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_fsetid</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_setfcap</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_mknod</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_audit_write</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_net_bind_service</span></code>.
+The entrypoint keeps these because it needs them for privilege separation using gosu: <code class="docutils literal notranslate"><span class="pre">cap_chown</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_setuid</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_setgid</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_fowner</span></code>, <code class="docutils literal notranslate"><span class="pre">cap_kill</span></code>.</p>
+<p>This is best-effort: if <code class="docutils literal notranslate"><span class="pre">capsh</span></code> is not available or <code class="docutils literal notranslate"><span class="pre">CAP_SETPCAP</span></code> is not in the bounding set, the entrypoint logs a warning and continues with the default capability set.
+For additional protection, pass <code class="docutils literal notranslate"><span class="pre">--cap-drop=ALL</span></code> with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> or Compose (see <a class="reference internal" href="../deployment/sandbox-hardening.html"><span class="std std-doc">Sandbox Hardening</span></a>).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The entrypoint drops dangerous capabilities at startup using <code class="docutils literal notranslate"><span class="pre">capsh</span></code>. Best-effort.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>When launching with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> directly, pass <code class="docutils literal notranslate"><span class="pre">--cap-drop=ALL</span> <span class="pre">--cap-add=NET_BIND_SERVICE</span></code> for stricter enforcement. In the standard NemoClaw flow (with <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>), the entrypoint handles capability dropping automatically.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CAP_NET_RAW</span></code> allows raw socket access for network sniffing. <code class="docutils literal notranslate"><span class="pre">CAP_DAC_OVERRIDE</span></code> bypasses filesystem permission checks. Attackers can use <code class="docutils literal notranslate"><span class="pre">CAP_SYS_CHROOT</span></code> in container escape chains. If <code class="docutils literal notranslate"><span class="pre">capsh</span></code> is unavailable, the container runs with the default Docker capability set.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Run on an image that includes <code class="docutils literal notranslate"><span class="pre">capsh</span></code> (the NemoClaw image includes it through <code class="docutils literal notranslate"><span class="pre">libcap2-bin</span></code>). For defense-in-depth, also pass <code class="docutils literal notranslate"><span class="pre">--cap-drop=ALL</span></code> at the container runtime level.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="gateway-process-isolation">
+<h3>Gateway Process Isolation<a class="headerlink" href="#gateway-process-isolation" title="Link to this heading">#</a></h3>
+<p>The OpenClaw gateway runs as a separate <code class="docutils literal notranslate"><span class="pre">gateway</span></code> user, not as the <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> user that runs the agent.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The entrypoint starts the gateway process using <code class="docutils literal notranslate"><span class="pre">gosu</span> <span class="pre">gateway</span></code>, isolating it from the agent’s <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> user.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The entrypoint enforces it when running as root. In non-root mode (when OpenShell sets <code class="docutils literal notranslate"><span class="pre">no-new-privileges</span></code>), gateway process isolation does not work because <code class="docutils literal notranslate"><span class="pre">gosu</span></code> cannot change users.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>If the gateway and agent run as the same user, the agent can kill the gateway process and restart it with a tampered configuration (the “fake-HOME” attack).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. The entrypoint handles this automatically. Be aware that non-root mode disables this isolation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="no-new-privileges">
+<h3>No New Privileges<a class="headerlink" href="#no-new-privileges" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">no-new-privileges</span></code> flag prevents processes from gaining additional privileges through setuid binaries or capability inheritance.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>OpenShell sets <code class="docutils literal notranslate"><span class="pre">PR_SET_NO_NEW_PRIVS</span></code> using <code class="docutils literal notranslate"><span class="pre">prctl()</span></code> inside the sandbox process as part of the seccomp filter setup. The NemoClaw Compose example also shows the equivalent <code class="docutils literal notranslate"><span class="pre">security_opt:</span> <span class="pre">no-new-privileges:true</span></code> setting.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>OpenShell’s seccomp path enforces this inside the sandbox. It is not a user-facing knob.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Without this flag, a compromised process could execute a setuid binary to escalate to root inside the container, then attempt container escape techniques.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. OpenShell enforces this automatically when the sandbox network policy is active. This flag prevents <code class="docutils literal notranslate"><span class="pre">gosu</span></code> from switching users, so non-root mode disables gateway process isolation in the NemoClaw entrypoint.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="process-limit">
+<h3>Process Limit<a class="headerlink" href="#process-limit" title="Link to this heading">#</a></h3>
+<p>A process limit caps the number of processes the sandbox user can spawn.
+The entrypoint sets both soft and hard limits using <code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-u</span> <span class="pre">512</span></code>.
+This is best-effort: if the container runtime restricts <code class="docutils literal notranslate"><span class="pre">ulimit</span></code> modification, the entrypoint logs a security warning and continues without the limit.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>512 processes (<code class="docutils literal notranslate"><span class="pre">ulimit</span> <span class="pre">-u</span> <span class="pre">512</span></code>), best-effort.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Increase or decrease the limit with <code class="docutils literal notranslate"><span class="pre">--ulimit</span> <span class="pre">nproc=N:N</span></code> in <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> or the <code class="docutils literal notranslate"><span class="pre">ulimits</span></code> section in Compose. The runtime-level ulimit takes precedence over the entrypoint’s setting.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Removing or raising the limit makes the sandbox vulnerable to fork-bomb attacks, where a runaway process spawns children until the host runs out of resources. If the entrypoint cannot set the limit (logs <code class="docutils literal notranslate"><span class="pre">[SECURITY]</span> <span class="pre">Could</span> <span class="pre">not</span> <span class="pre">set</span> <span class="pre">soft/hard</span> <span class="pre">nproc</span> <span class="pre">limit</span></code>), the container runs without process limits.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Keep the default at 512. If the agent runs workloads that spawn many child processes (such as parallel test runners), increase to 1024 and monitor host resource usage. If the entrypoint logs a warning about ulimit restrictions, set the limit through the container runtime instead.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="non-root-user">
+<h3>Non-Root User<a class="headerlink" href="#non-root-user" title="Link to this heading">#</a></h3>
+<p>The sandbox runs agent processes as a dedicated <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> user and group.
+The entrypoint starts as root for privilege separation, then drops to the <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> user for all agent commands.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">run_as_user:</span> <span class="pre">sandbox</span></code>, <code class="docutils literal notranslate"><span class="pre">run_as_group:</span> <span class="pre">sandbox</span></code>. A separate <code class="docutils literal notranslate"><span class="pre">gateway</span></code> user runs the gateway process.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Change the <code class="docutils literal notranslate"><span class="pre">process</span></code> section in the policy file to run as a different user.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Running as <code class="docutils literal notranslate"><span class="pre">root</span></code> inside the container gives the agent access to modify any file in the container filesystem and increases the impact of container escape vulnerabilities.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Never run as root. Keep the <code class="docutils literal notranslate"><span class="pre">sandbox</span></code> user.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="path-hardening">
+<h3>PATH Hardening<a class="headerlink" href="#path-hardening" title="Link to this heading">#</a></h3>
+<p>The entrypoint locks the <code class="docutils literal notranslate"><span class="pre">PATH</span></code> environment variable to system directories, preventing the agent from injecting malicious binaries into command resolution.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The entrypoint sets <code class="docutils literal notranslate"><span class="pre">PATH</span></code> to <code class="docutils literal notranslate"><span class="pre">/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></code> at startup.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The entrypoint enforces it.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Without PATH hardening, the agent could create an executable named <code class="docutils literal notranslate"><span class="pre">curl</span></code> or <code class="docutils literal notranslate"><span class="pre">git</span></code> in a writable directory earlier in the PATH, intercepting commands run by the entrypoint or other processes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. The entrypoint handles this automatically.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="build-toolchain-removal">
+<h3>Build Toolchain Removal<a class="headerlink" href="#build-toolchain-removal" title="Link to this heading">#</a></h3>
+<p>The Dockerfile removes compilers and network probes from the runtime image.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The Dockerfile purges <code class="docutils literal notranslate"><span class="pre">gcc</span></code>, <code class="docutils literal notranslate"><span class="pre">gcc-12</span></code>, <code class="docutils literal notranslate"><span class="pre">g++</span></code>, <code class="docutils literal notranslate"><span class="pre">g++-12</span></code>, <code class="docutils literal notranslate"><span class="pre">cpp</span></code>, <code class="docutils literal notranslate"><span class="pre">cpp-12</span></code>, <code class="docutils literal notranslate"><span class="pre">make</span></code>, <code class="docutils literal notranslate"><span class="pre">netcat-openbsd</span></code>, <code class="docutils literal notranslate"><span class="pre">netcat-traditional</span></code>, and <code class="docutils literal notranslate"><span class="pre">ncat</span></code> from the sandbox image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Modify the Dockerfile to keep these tools, or install them at runtime if package manager access is allowed.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>A compiler lets the agent build arbitrary native code, including kernel exploits or custom network tools. <code class="docutils literal notranslate"><span class="pre">netcat</span></code> enables arbitrary TCP connections that bypass HTTP-level policy enforcement.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Keep build tools removed. If the agent needs to compile code, run the build in a separate, purpose-built container and copy artifacts into the sandbox.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="image-digest-pinning">
+<h3>Image Digest Pinning<a class="headerlink" href="#image-digest-pinning" title="Link to this heading">#</a></h3>
+<p>The blueprint references the sandbox image by an immutable <code class="docutils literal notranslate"><span class="pre">&#64;sha256:</span></code> digest instead of a mutable tag such as <code class="docutils literal notranslate"><span class="pre">:latest</span></code>.
+A registry compromise or accidental force-push cannot silently swap the sandbox image.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nemoclaw-blueprint/blueprint.yaml</span></code> pins the sandbox image by digest. A CI regression test blocks any mutable-tag reference from merging.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Contributors bumping the sandbox image must update the digest in <code class="docutils literal notranslate"><span class="pre">blueprint.yaml</span></code>. Release tooling should rewrite the digest automatically.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Reverting to a mutable tag (<code class="docutils literal notranslate"><span class="pre">:latest</span></code>) allows a registry-side change to replace the sandbox image without any blueprint update, which is a supply-chain risk.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Always reference the sandbox image by digest. If you build a custom image with <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span> <span class="pre">--from</span></code>, the digest constraint does not apply to your local build.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="auth-profile-permissions">
+<h3>Auth Profile Permissions<a class="headerlink" href="#auth-profile-permissions" title="Link to this heading">#</a></h3>
+<p>The entrypoint and migration flows enforce <code class="docutils literal notranslate"><span class="pre">chmod</span> <span class="pre">600</span></code> on all <code class="docutils literal notranslate"><span class="pre">auth-profiles.json</span></code> files under <code class="docutils literal notranslate"><span class="pre">~/.openclaw</span></code>.
+This prevents other users on the host from reading stored credentials.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">600</span></code> permissions applied recursively at startup and after migration restores.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The entrypoint enforces it.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Looser permissions let other users or processes on the host read provider API keys and tokens stored in auth profiles.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. If you see a <code class="docutils literal notranslate"><span class="pre">permission</span> <span class="pre">denied</span></code> error when reading auth profiles, verify that you are running as the same user who created them.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="gateway-authentication-controls">
+<h2>Gateway Authentication Controls<a class="headerlink" href="#gateway-authentication-controls" title="Link to this heading">#</a></h2>
+<p>The OpenClaw gateway authenticates devices that connect to the Control UI dashboard.
+NemoClaw hardens these defaults at image build time.</p>
+<section id="device-authentication">
+<h3>Device Authentication<a class="headerlink" href="#device-authentication" title="Link to this heading">#</a></h3>
+<p>Device authentication requires each connecting device to go through a pairing flow before it can interact with the gateway.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Enabled. The gateway requires device pairing for all connections.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Set <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH=1</span></code> as a Docker build argument to disable device authentication. This is a build-time setting baked into <code class="docutils literal notranslate"><span class="pre">openclaw.json</span></code> and verified by hash at startup.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Disabling device auth allows any device on the network to connect to the gateway without proving identity. This is dangerous when combined with LAN-bind changes or cloudflared tunnels in remote deployments, resulting in an unauthenticated, publicly reachable dashboard.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Keep device auth enabled (the default). Only disable it for headless or development environments where no untrusted devices can reach the gateway.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="insecure-auth-derivation">
+<h3>Insecure Auth Derivation<a class="headerlink" href="#insecure-auth-derivation" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">allowInsecureAuth</span></code> setting controls whether the gateway permits non-HTTPS authentication.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Derived from the <code class="docutils literal notranslate"><span class="pre">CHAT_UI_URL</span></code> scheme at build time. When the URL uses <code class="docutils literal notranslate"><span class="pre">http://</span></code> (local development), insecure auth is allowed. When it uses <code class="docutils literal notranslate"><span class="pre">https://</span></code> (remote or production), insecure auth is blocked.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is derived automatically from <code class="docutils literal notranslate"><span class="pre">CHAT_UI_URL</span></code>. Set <code class="docutils literal notranslate"><span class="pre">CHAT_UI_URL</span></code> to an <code class="docutils literal notranslate"><span class="pre">https://</span></code> URL to enforce secure auth.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Allowing insecure auth over HTTPS defeats the purpose of TLS, because authentication tokens transit in cleartext.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Use <code class="docutils literal notranslate"><span class="pre">https://</span></code> for any deployment accessible beyond <code class="docutils literal notranslate"><span class="pre">localhost</span></code>. The default local URL (<code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:18789</span></code>) correctly allows insecure auth for local development.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="auto-pair-client-allowlist">
+<h3>Auto-Pair Client Allowlist<a class="headerlink" href="#auto-pair-client-allowlist" title="Link to this heading">#</a></h3>
+<p>The auto-pair watcher automatically approves device pairing requests from recognized clients, so you do not need to manually approve the Control UI.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The watcher approves devices with <code class="docutils literal notranslate"><span class="pre">clientId</span></code> set to <code class="docutils literal notranslate"><span class="pre">openclaw-control-ui</span></code> or <code class="docutils literal notranslate"><span class="pre">clientMode</span></code> set to <code class="docutils literal notranslate"><span class="pre">webchat</span></code>. All other clients are rejected and logged.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The allowlist is defined in the entrypoint script.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Approving all device types without validation lets rogue or unexpected clients pair with the gateway unchallenged.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. The entrypoint handles this automatically. If you see <code class="docutils literal notranslate"><span class="pre">[auto-pair]</span> <span class="pre">rejected</span> <span class="pre">unknown</span> <span class="pre">client=...</span></code> in the logs, investigate the source of the unexpected connection.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="cli-secret-redaction">
+<h3>CLI Secret Redaction<a class="headerlink" href="#cli-secret-redaction" title="Link to this heading">#</a></h3>
+<p>The CLI automatically redacts secret patterns (API keys, bearer tokens, provider credentials) from command output and error messages before logging them.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Enabled. The runner redacts secrets from stdout, stderr, and thrown error messages.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The CLI enforces it on all command output paths.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>Without redaction, secrets could appear in terminal scrollback, log files, or debug output shared in bug reports.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>No action needed. If you share <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">debug</span></code> output, verify that no secrets appear in the collected diagnostics.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="memory-secret-scanner">
+<h3>Memory Secret Scanner<a class="headerlink" href="#memory-secret-scanner" title="Link to this heading">#</a></h3>
+<p>The NemoClaw plugin blocks the agent from writing likely secrets (API keys, tokens, private keys) into persistent memory files.
+The scanner intercepts Write, Edit, and similar tool calls targeting memory and workspace paths before they reach disk.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Enabled. The plugin registers a <code class="docutils literal notranslate"><span class="pre">before_tool_call</span></code> hook that scans for 14 high-confidence secret patterns.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What it covers</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.openclaw-data/memory/</span></code>, <code class="docutils literal notranslate"><span class="pre">workspace/</span></code>, <code class="docutils literal notranslate"><span class="pre">agents/</span></code>, <code class="docutils literal notranslate"><span class="pre">skills/</span></code>, <code class="docutils literal notranslate"><span class="pre">hooks/</span></code>, and <code class="docutils literal notranslate"><span class="pre">MEMORY.md</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>What you can change</p></td>
+<td><p>This is not a user-facing knob. The plugin enforces it automatically.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Risk if relaxed</p></td>
+<td><p>Without scanning, the agent could persist API keys or tokens in memory files that survive across sessions and backups.</p></td>
+</tr>
+<tr class="row-even"><td><p>Recommendation</p></td>
+<td><p>No action needed. If a write is blocked, the agent receives an actionable error listing the detected patterns.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="inference-controls">
+<h2>Inference Controls<a class="headerlink" href="#inference-controls" title="Link to this heading">#</a></h2>
+<p>OpenShell routes all inference traffic through the gateway to isolate provider credentials from the sandbox.</p>
+<section id="routed-inference-through-inference-local">
+<h3>Routed Inference through <code class="docutils literal notranslate"><span class="pre">inference.local</span></code><a class="headerlink" href="#routed-inference-through-inference-local" title="Link to this heading">#</a></h3>
+<p>The OpenShell gateway intercepts all inference requests from the agent and routes them to the configured provider.
+The agent never receives the provider API key.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>The agent talks to <code class="docutils literal notranslate"><span class="pre">inference.local</span></code>. The host owns the credential and upstream endpoint.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>You cannot configure this architecture. The system always enforces it.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if bypassed</p></td>
+<td><p>If the agent could reach an inference endpoint directly (by adding it to the network policy), it would need an API key. Since the sandbox does not contain credentials, this acts as defense-in-depth. However, adding an inference provider’s host to the network policy without going through OpenShell routing could let the agent use a stolen or hardcoded key.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Do not add inference provider hosts (such as <code class="docutils literal notranslate"><span class="pre">api.openai.com</span></code> or <code class="docutils literal notranslate"><span class="pre">api.anthropic.com</span></code>) to the network policy. Use OpenShell inference routing instead.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="provider-trust-tiers">
+<h3>Provider Trust Tiers<a class="headerlink" href="#provider-trust-tiers" title="Link to this heading">#</a></h3>
+<p>Different inference providers have different trust and cost profiles.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Provider</p></th>
+<th class="head"><p>Trust level</p></th>
+<th class="head"><p>Cost risk</p></th>
+<th class="head"><p>Data handling</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NVIDIA Endpoints</p></td>
+<td><p>High. Hosted on <code class="docutils literal notranslate"><span class="pre">build.nvidia.com</span></code>.</p></td>
+<td><p>Pay-per-token with an API key. Unattended agents can accumulate cost.</p></td>
+<td><p>NVIDIA infrastructure processes requests.</p></td>
+</tr>
+<tr class="row-odd"><td><p>OpenAI</p></td>
+<td><p>High. Commercial API.</p></td>
+<td><p>Pay-per-token. Same cost risk as NVIDIA Endpoints.</p></td>
+<td><p>Subject to OpenAI data policies.</p></td>
+</tr>
+<tr class="row-even"><td><p>Anthropic</p></td>
+<td><p>High. Commercial API.</p></td>
+<td><p>Pay-per-token. Same cost risk as NVIDIA Endpoints.</p></td>
+<td><p>Subject to Anthropic data policies.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Google Gemini</p></td>
+<td><p>High. Commercial API.</p></td>
+<td><p>Pay-per-token. Same cost risk as NVIDIA Endpoints.</p></td>
+<td><p>Subject to Google data policies.</p></td>
+</tr>
+<tr class="row-even"><td><p>Local Ollama</p></td>
+<td><p>Self-hosted. No data leaves the machine.</p></td>
+<td><p>No per-token cost. GPU/CPU resource cost.</p></td>
+<td><p>Data stays local.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Custom compatible endpoint</p></td>
+<td><p>Varies. Depends on the proxy or gateway.</p></td>
+<td><p>Varies.</p></td>
+<td><p>Depends on the endpoint operator.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Recommendation:</strong> For sensitive workloads, use local Ollama to keep data on-premise. For general use, NVIDIA Endpoints provide a good balance of capability and trust. Review the data policies of any cloud provider you use.</p>
+</section>
+<section id="experimental-providers">
+<h3>Experimental Providers<a class="headerlink" href="#experimental-providers" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_EXPERIMENTAL=1</span></code> environment variable gates local NVIDIA NIM and local vLLM.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Detail</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Default</p></td>
+<td><p>Disabled. The onboarding wizard does not show these providers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>What you can change</p></td>
+<td><p>Set <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_EXPERIMENTAL=1</span></code> before running <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Risk if relaxed</p></td>
+<td><p>NemoClaw has not fully validated these providers. NIM requires a NIM-capable GPU. vLLM must already be running on <code class="docutils literal notranslate"><span class="pre">localhost:8000</span></code>. Misconfiguration can cause failed inference or unexpected behavior.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommendation</p></td>
+<td><p>Use experimental providers only for evaluation. Do not rely on them for always-on assistants.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="posture-profiles">
+<h2>Posture Profiles<a class="headerlink" href="#posture-profiles" title="Link to this heading">#</a></h2>
+<p>The following profiles describe how to configure NemoClaw for different use cases.
+These are not separate policy files.
+They provide guidance on which controls to keep tight or relax.</p>
+<section id="locked-down-default">
+<h3>Locked-Down (Default)<a class="headerlink" href="#locked-down-default" title="Link to this heading">#</a></h3>
+<p>Use for always-on assistants with minimal external access.</p>
+<ul class="simple">
+<li><p>Keep all defaults. Do not add presets.</p></li>
+<li><p>Use operator approval for any endpoint the agent requests.</p></li>
+<li><p>Use NVIDIA Endpoints or local Ollama for inference.</p></li>
+<li><p>Monitor the TUI for unexpected network requests.</p></li>
+</ul>
+</section>
+<section id="development">
+<h3>Development<a class="headerlink" href="#development" title="Link to this heading">#</a></h3>
+<p>Use when the agent needs package registries, Docker Hub, or broader GitHub access during development tasks.</p>
+<ul class="simple">
+<li><p>Apply the <code class="docutils literal notranslate"><span class="pre">pypi</span></code> and <code class="docutils literal notranslate"><span class="pre">npm</span></code> presets for package installation.</p></li>
+<li><p>Keep binary restrictions on all presets.</p></li>
+<li><p>Review the agent’s network activity periodically with <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">term</span></code>.</p></li>
+<li><p>Use operator approval for any endpoint not covered by a preset.</p></li>
+</ul>
+</section>
+<section id="integration-testing">
+<h3>Integration Testing<a class="headerlink" href="#integration-testing" title="Link to this heading">#</a></h3>
+<p>Use when the agent talks to internal APIs or third-party services during testing.</p>
+<ul class="simple">
+<li><p>Add custom endpoint entries with tight path and method restrictions.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> for all HTTP APIs to maintain inspection.</p></li>
+<li><p>Use operator approval for unknown endpoints during test runs.</p></li>
+<li><p>Review and clean up the baseline policy after testing. Remove endpoints that are no longer needed.</p></li>
+</ul>
+</section>
+</section>
+<section id="common-mistakes">
+<h2>Common Mistakes<a class="headerlink" href="#common-mistakes" title="Link to this heading">#</a></h2>
+<p>The following patterns weaken security without providing meaningful benefit.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mistake</p></th>
+<th class="head"><p>Why it matters</p></th>
+<th class="head"><p>What to do instead</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Omitting <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> on REST API endpoints</p></td>
+<td><p>Endpoints without a <code class="docutils literal notranslate"><span class="pre">protocol</span></code> field use L4-only enforcement. The proxy allows the TCP stream through after checking host, port, and binary, but cannot see or filter individual HTTP requests.</p></td>
+<td><p>Add <code class="docutils literal notranslate"><span class="pre">protocol:</span> <span class="pre">rest</span></code> with explicit <code class="docutils literal notranslate"><span class="pre">rules</span></code> to enable per-request method and path control on REST APIs.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Adding endpoints to the baseline policy for one-off requests</p></td>
+<td><p>Adding an endpoint to the baseline policy makes it permanently reachable across all sandbox instances.</p></td>
+<td><p>Use operator approval. Approved endpoints persist within the sandbox instance but reset when you destroy and recreate the sandbox.</p></td>
+</tr>
+<tr class="row-even"><td><p>Relying solely on the entrypoint for capability drops</p></td>
+<td><p>The entrypoint drops dangerous capabilities using <code class="docutils literal notranslate"><span class="pre">capsh</span></code>, but this is best-effort. If <code class="docutils literal notranslate"><span class="pre">capsh</span></code> is unavailable or <code class="docutils literal notranslate"><span class="pre">CAP_SETPCAP</span></code> is not in the bounding set, the container runs with the default capability set.</p></td>
+<td><p>Pass <code class="docutils literal notranslate"><span class="pre">--cap-drop=ALL</span></code> at the container runtime level as defense-in-depth.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Granting write access to <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw</span></code></p></td>
+<td><p>This directory contains the OpenClaw gateway configuration. A writable <code class="docutils literal notranslate"><span class="pre">.openclaw</span></code> lets the agent modify auth tokens, disable CORS, or redirect inference routing.</p></td>
+<td><p>Store agent-writable state in <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw-data</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>Adding inference provider hosts to the network policy</p></td>
+<td><p>Direct network access to an inference host bypasses credential isolation and usage tracking.</p></td>
+<td><p>Use OpenShell inference routing instead of adding hosts like <code class="docutils literal notranslate"><span class="pre">api.openai.com</span></code> or <code class="docutils literal notranslate"><span class="pre">api.anthropic.com</span></code> to the network policy.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Disabling device auth for remote deployments</p></td>
+<td><p>Without device auth, any device on the network can connect to the gateway without pairing. Combined with a cloudflared tunnel, this makes the dashboard publicly accessible and unauthenticated.</p></td>
+<td><p>Keep <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH</span></code> at its default (<code class="docutils literal notranslate"><span class="pre">0</span></code>). Only set it to <code class="docutils literal notranslate"><span class="pre">1</span></code> for local headless or development environments.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="known-limitations">
+<h2>Known Limitations<a class="headerlink" href="#known-limitations" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Limitation</p></th>
+<th class="head"><p>Impact</p></th>
+<th class="head"><p>Mitigation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">openclaw</span> <span class="pre">agent</span> <span class="pre">--local</span></code> bypasses gateway</p></td>
+<td><p>Secret scanning, network policy, and inference auth are not enforced when the agent runs in local mode.</p></td>
+<td><p>A runtime warning is emitted when <code class="docutils literal notranslate"><span class="pre">--local</span></code> is detected. Avoid <code class="docutils literal notranslate"><span class="pre">--local</span></code> for production workflows. A future OpenClaw-level hook will close this gap.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Direct filesystem writes bypass secret scanner</p></td>
+<td><p>The scanner intercepts OpenClaw tool calls, not raw filesystem writes (e.g., <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">secret</span> <span class="pre">&gt;</span> <span class="pre">file</span></code>).</p></td>
+<td><p>Landlock restricts writable paths. The scanner is application-layer defense-in-depth, not a filesystem-level control.</p></td>
+</tr>
+<tr class="row-even"><td><p>Base64/hex-encoded secrets are not detected</p></td>
+<td><p>Content-based regex scanning cannot detect encoded or obfuscated secrets.</p></td>
+<td><p>Use environment variables or credential stores instead of writing secrets to files.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="related-topics">
+<h2>Related Topics<a class="headerlink" href="#related-topics" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../reference/network-policies.html"><span class="std std-doc">Network Policies</span></a> for the full baseline policy reference.</p></li>
+<li><p><a class="reference internal" href="../network-policy/customize-network-policy.html"><span class="std std-doc">Customize the Network Policy</span></a> for static and dynamic policy changes.</p></li>
+<li><p><a class="reference internal" href="../network-policy/approve-network-requests.html"><span class="std std-doc">Approve or Deny Network Requests</span></a> for the operator approval flow.</p></li>
+<li><p><a class="reference internal" href="../deployment/sandbox-hardening.html"><span class="std std-doc">Sandbox Hardening</span></a> for container-level security measures.</p></li>
+<li><p><a class="reference internal" href="../inference/inference-options.html"><span class="std std-doc">Inference Options</span></a> for provider configuration details.</p></li>
+<li><p><a class="reference internal" href="../about/how-it-works.html"><span class="std std-doc">How It Works</span></a> for the protection layer architecture.</p></li>
+</ul>
+<!-- - OpenShell [Security Best Practices](https://docs.nvidia.com/openshell/latest/security/best-practices.html) for the platform-level controls reference, including network namespace isolation, seccomp filters, SSRF protection, TLS termination, and gateway authentication. -->
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../network-policy/customize-network-policy.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Customize the Sandbox Network Policy</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="credential-storage.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Credential Storage</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+
+
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#protection-layers-at-a-glance">Protection Layers at a Glance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#network-controls">Network Controls</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deny-by-default-egress">Deny-by-Default Egress</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#binary-scoped-endpoint-rules">Binary-Scoped Endpoint Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#path-scoped-http-rules">Path-Scoped HTTP Rules</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#l4-only-vs-l7-inspection-protocol-field">L4-Only vs L7 Inspection (<code class="docutils literal notranslate"><span class="pre">protocol</span></code> Field)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#operator-approval-flow">Operator Approval Flow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#policy-presets">Policy Presets</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filesystem-controls">Filesystem Controls</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-only-system-paths">Read-Only System Paths</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#read-only-openclaw-config">Read-Only <code class="docutils literal notranslate"><span class="pre">.openclaw</span></code> Config</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#writable-paths">Writable Paths</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#landlock-lsm-enforcement">Landlock LSM Enforcement</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#process-controls">Process Controls</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#capability-drops">Capability Drops</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#gateway-process-isolation">Gateway Process Isolation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-new-privileges">No New Privileges</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#process-limit">Process Limit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#non-root-user">Non-Root User</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#path-hardening">PATH Hardening</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-toolchain-removal">Build Toolchain Removal</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image-digest-pinning">Image Digest Pinning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auth-profile-permissions">Auth Profile Permissions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gateway-authentication-controls">Gateway Authentication Controls</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#device-authentication">Device Authentication</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#insecure-auth-derivation">Insecure Auth Derivation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#auto-pair-client-allowlist">Auto-Pair Client Allowlist</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-secret-redaction">CLI Secret Redaction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-secret-scanner">Memory Secret Scanner</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inference-controls">Inference Controls</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#routed-inference-through-inference-local">Routed Inference through <code class="docutils literal notranslate"><span class="pre">inference.local</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#provider-trust-tiers">Provider Trust Tiers</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#experimental-providers">Experimental Providers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#posture-profiles">Posture Profiles</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#locked-down-default">Locked-Down (Default)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#development">Development</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#integration-testing">Integration Testing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-mistakes">Common Mistakes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#known-limitations">Known Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#related-topics">Related Topics</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+<a class="footer-brand logo" href="https://www.nvidia.com">
+  <img src="../_static/nvidia-logo-horiz-rgb-1c-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA"/>
+  <img src="../_static/nvidia-logo-horiz-rgb-1c-wht-for-screen.svg" class="logo__image only-dark" alt="NVIDIA"/>
+</a></div>
+      
+        <div class="footer-item">
+
+<div class="footer-links">
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/">Privacy Policy</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/">Your Privacy Choices</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/">Terms of Service</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/accessibility/">Accessibility</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/company-policies/">Corporate Policies</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/product-security/">Product Security</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/contact/">Contact</a>
+  
+  
+  
+</div>
+</div>
+      
+        <div class="footer-item">
+
+
+
+
+  <p class="copyright">
+    
+      Copyright © 2026, NVIDIA Corporation.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+<script type="text/javascript">if (typeof _satellite !== "undefined") {_satellite.pageBottom();}</script>
+
+  </body>
+</html>

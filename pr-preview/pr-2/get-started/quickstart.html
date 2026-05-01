@@ -1,0 +1,1068 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quickstart &#8212; NVIDIA NemoClaw Developer Guide</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/nvidia-sphinx-theme.css?v=933278ad" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/enhanced-search.css?v=ef2c6a0b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+
+
+    <script src="../_static/documentation_options.js?v=349eaea7"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=6dbb43f8"></script>
+    <script src="../_static/search-assets.bundle.js?v=099b119e"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'get-started/quickstart';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = '../versions1.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '0.0.29';
+        DOCUMENTATION_OPTIONS.show_version_warning_banner =
+            false;
+        </script>
+
+    <link rel="canonical" href="https://docs.nvidia.com/nemoclaw/latest/get-started/quickstart.html" />
+    <link rel="icon" href="../_static/favicon.png"/>
+
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Inference Options" href="../inference/inference-options.html" />
+    <link rel="prev" title="Prepare Windows for NemoClaw" href="windows-preparation.html" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+
+
+<script src="https://assets.adobedtm.com/5d4962a43b79/c1061d2c5e7b/launch-191c2462b890.min.js"></script>
+
+  </head>
+
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">&#x1F514; NVIDIA NemoClaw is <strong>alpha software</strong>. APIs and behavior may change without notice. Do not use in production.</div>
+</aside>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+  
+  
+    <p class="title logo__title">NVIDIA NemoClaw Developer Guide</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-2"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-2"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-2"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-2">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/NVIDIA/NemoClaw" title="NemoClaw GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/XFpfPv9Uvx" title="NemoClaw Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw Discord</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/nvidia-logo-horiz-rgb-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+    <img src="../_static/nvidia-logo-horiz-rgb-wht-for-screen.svg" class="logo__image only-dark pst-js-only" alt="NVIDIA NemoClaw Developer Guide - Home"/>
+  
+  
+    <p class="title logo__title">NVIDIA NemoClaw Developer Guide</p>
+  
+</a>
+
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+<div class="version-switcher__container dropdown pst-js-only">
+  <button id="pst-version-switcher-button-3"
+    type="button"
+    class="version-switcher__button btn btn-sm dropdown-toggle"
+    data-bs-toggle="dropdown"
+    aria-haspopup="listbox"
+    aria-controls="pst-version-switcher-list-3"
+    aria-label="Version switcher list"
+  >
+    Choose version  <!-- this text may get changed later by javascript -->
+    <span class="caret"></span>
+  </button>
+  <div id="pst-version-switcher-list-3"
+    class="version-switcher__menu dropdown-menu list-group-flush py-0"
+    role="listbox" aria-labelledby="pst-version-switcher-button-3">
+    <!-- dropdown will be populated by javascript on page load -->
+  </div>
+</div></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/NVIDIA/NemoClaw" title="NemoClaw GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://discord.gg/XFpfPv9Uvx" title="NemoClaw Discord" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-discord fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">NemoClaw Discord</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Table of Contents">
+  <p class="bd-links__title" role="heading" aria-level="1">Table of Contents</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">About NemoClaw</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../about/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/how-it-works.html">How It Works</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/ecosystem.html">Ecosystem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/release-notes.html">Release Notes</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="prerequisites.html">Prerequisites</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="windows-preparation.html">Prepare Windows for NemoClaw</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Quickstart</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../inference/inference-options.html">Inference Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/use-local-inference.html">Use Local Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/switch-inference-providers.html">Switch Inference Providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inference/set-up-sub-agent.html">Set Up Task-Specific Sub-Agents</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Network Policy</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../network-policy/approve-network-requests.html">Approve or Deny Network Requests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../network-policy/customize-network-policy.html">Customize the Network Policy</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Security</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../security/best-practices.html">Security Best Practices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/credential-storage.html">Credential Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/openclaw-controls.html">OpenClaw Controls</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Deployment</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../deployment/deploy-to-remote-gpu.html">Deploy to a Remote GPU Instance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/set-up-telegram-bridge.html">Set Up Telegram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/install-openclaw-plugins.html">Install OpenClaw Plugins</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment/sandbox-hardening.html">Sandbox Hardening</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Workspace</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../workspace/workspace-files.html">Workspace Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../workspace/backup-restore.html">Backup &amp; Restore</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Monitoring</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html">Monitor Sandbox Activity</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../reference/architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/commands.html">Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/network-policies.html">Network Policies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Resources</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../resources/agent-skills.html">Agent Skills</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/NVIDIA/NemoClaw/blob/main/SECURITY.md">Report Vulnerabilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../resources/license.html">License</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://discord.gg/XFpfPv9Uvx">Discord</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Quickstart</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <!--
+  SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+  SPDX-License-Identifier: Apache-2.0
+-->
+<section class="tex2jax_ignore mathjax_ignore" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading">#</a></h1>
+<p>Follow these steps to get started with NemoClaw and your first sandboxed OpenClaw agent.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Make sure you have completed reviewing the <a class="reference internal" href="prerequisites.html"><span class="std std-doc">Prerequisites</span></a> before following this guide.</p>
+</div>
+<section id="install-nemoclaw-and-onboard-openclaw-agent">
+<h2>Install NemoClaw and Onboard OpenClaw Agent<a class="headerlink" href="#install-nemoclaw-and-onboard-openclaw-agent" title="Link to this heading">#</a></h2>
+<p>Download and run the installer script.
+The script installs Node.js if it is not already present, then runs the guided onboard wizard to create a sandbox, configure inference, and apply security policies.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>NemoClaw creates a fresh OpenClaw instance inside the sandbox during the onboarding process.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://www.nvidia.com/nemoclaw.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</pre></div>
+</div>
+<p>If you use nvm or fnm to manage Node.js, the installer might not update your current shell’s PATH.
+If <code class="docutils literal notranslate"><span class="pre">nemoclaw</span></code> is not found after install, run <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">~/.bashrc</span></code> (or <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">~/.zshrc</span></code> for zsh) or open a new terminal.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The onboard flow builds the sandbox image with <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH=1</span></code> so the dashboard is immediately usable during setup.
+This is a build-time setting baked into the sandbox image, not a runtime knob.
+If you export <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DISABLE_DEVICE_AUTH</span></code> after onboarding finishes, it has no effect on an existing sandbox.</p>
+</div>
+<section id="respond-to-the-onboard-wizard">
+<h3>Respond to the Onboard Wizard<a class="headerlink" href="#respond-to-the-onboard-wizard" title="Link to this heading">#</a></h3>
+<p>After the installer launches <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>, the wizard walks you through a sandbox name, an inference provider, and a network policy preset.
+At any prompt, press Enter to accept the default shown in <code class="docutils literal notranslate"><span class="pre">[brackets]</span></code>, type <code class="docutils literal notranslate"><span class="pre">back</span></code> to return to the previous prompt, or type <code class="docutils literal notranslate"><span class="pre">exit</span></code> to quit.</p>
+<p>The inference provider prompt presents a numbered list.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  1) NVIDIA Endpoints
+  2) OpenAI
+  3) Other OpenAI-compatible endpoint
+  4) Anthropic
+  5) Other Anthropic-compatible endpoint
+  6) Google Gemini
+  7) Local Ollama        (only shown when Ollama is detected on the host)
+  Choose [1]:
+</pre></div>
+</div>
+<p>Pick the option that matches where you want inference traffic to go, then expand the matching helper below for the follow-up prompts and the API key environment variable to set.
+For the full list of providers and validation behavior, refer to <a class="reference internal" href="../inference/inference-options.html"><span class="std std-doc">Inference Options</span></a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Export the API key before launching the installer so the wizard does not have to ask for it.
+For example, run <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">NVIDIA_API_KEY=&lt;your-key&gt;</span></code> before <code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">...</span> <span class="pre">|</span> <span class="pre">bash</span></code>.
+If you entered a key incorrectly, refer to <a class="reference internal" href="#reset-a-stored-credential">Reset a Stored Credential</a> to clear and re-enter it.</p>
+</div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-server" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v4c0 .372-.116.717-.314 1 .198.283.314.628.314 1v4a1.75 1.75 0 0 1-1.75 1.75H1.75A1.75 1.75 0 0 1 0 12.75v-4c0-.358.109-.707.314-1a1.739 1.739 0 0 1-.314-1v-4C0 1.784.784 1 1.75 1ZM1.5 2.75v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm.25 5.75a.25.25 0 0 0-.25.25v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25ZM7 4.75A.75.75 0 0 1 7.75 4h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 7 4.75ZM7.75 10h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM3 4.75A.75.75 0 0 1 3.75 4h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 4.75ZM3.75 10h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"></path></svg></span><span class="sd-summary-text">Option 1: NVIDIA Endpoints</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to models hosted on <a class="reference external" href="https://build.nvidia.com" rel="noreferer noopener" target="_blank">build.nvidia.com</a>.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">NVIDIA_API_KEY</span></code> for the API key. Get one from the <a class="reference external" href="https://build.nvidia.com/settings/api-keys" rel="noreferer noopener" target="_blank">NVIDIA build API keys page</a>.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, press Enter (or type <code class="docutils literal notranslate"><span class="pre">1</span></code>) to select <strong>NVIDIA Endpoints</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">NVIDIA_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">model</span> <span class="pre">[1]:</span></code> prompt, pick a curated model from the list (for example, <strong>Nemotron 3 Super 120B</strong>, <strong>Kimi K2.5</strong>, <strong>GLM-5.1</strong>, <strong>MiniMax M2.5</strong>, or <strong>GPT-OSS 120B</strong>), or pick <strong>Other…</strong> to enter any model ID from the <a class="reference external" href="https://build.nvidia.com" rel="noreferer noopener" target="_blank">NVIDIA Endpoints catalog</a>.</p></li>
+</ol>
+<p class="sd-card-text">NemoClaw validates the model against the catalog API before creating the sandbox.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p class="sd-card-text">Use this option for Nemotron and other models hosted on <code class="docutils literal notranslate"><span class="pre">build.nvidia.com</span></code>. If you run NVIDIA Nemotron from a self-hosted NIM, an enterprise gateway, or any other endpoint, choose <strong>Option 3</strong> instead, since all Nemotron models expose OpenAI-compatible APIs.</p>
+</div>
+</div>
+</details><div class="docutils">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-server" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v4c0 .372-.116.717-.314 1 .198.283.314.628.314 1v4a1.75 1.75 0 0 1-1.75 1.75H1.75A1.75 1.75 0 0 1 0 12.75v-4c0-.358.109-.707.314-1a1.739 1.739 0 0 1-.314-1v-4C0 1.784.784 1 1.75 1ZM1.5 2.75v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm.25 5.75a.25.25 0 0 0-.25.25v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25ZM7 4.75A.75.75 0 0 1 7.75 4h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 7 4.75ZM7.75 10h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM3 4.75A.75.75 0 0 1 3.75 4h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 4.75ZM3.75 10h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"></path></svg></span><span class="sd-summary-text">Option 2: OpenAI</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to the OpenAI API at <code class="docutils literal notranslate"><span class="pre">https://api.openai.com/v1</span></code>.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY</span></code> for the API key. Get one from the <a class="reference external" href="https://platform.openai.com/api-keys" rel="noreferer noopener" target="_blank">OpenAI API keys page</a>.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">2</span></code> to select <strong>OpenAI</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">OPENAI_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">model</span> <span class="pre">[1]:</span></code> prompt, pick a curated model (for example, <code class="docutils literal notranslate"><span class="pre">gpt-5.4</span></code>, <code class="docutils literal notranslate"><span class="pre">gpt-5.4-mini</span></code>, <code class="docutils literal notranslate"><span class="pre">gpt-5.4-nano</span></code>, or <code class="docutils literal notranslate"><span class="pre">gpt-5.4-pro-2026-03-05</span></code>), or pick <strong>Other…</strong> to enter any OpenAI model ID.</p></li>
+</ol>
+</div>
+</details></div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-link-external" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path></svg></span><span class="sd-summary-text">Option 3: Other OpenAI-Compatible Endpoint</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to any server that implements <code class="docutils literal notranslate"><span class="pre">/v1/chat/completions</span></code>, including OpenRouter, LocalAI, llama.cpp, vLLM behind a proxy, and any compatible gateway.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">COMPATIBLE_API_KEY</span></code> for the API key. Set it to whatever credential your endpoint expects. If your endpoint does not require auth, use any non-empty placeholder.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">3</span></code> to select <strong>Other OpenAI-compatible endpoint</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">OpenAI-compatible</span> <span class="pre">base</span> <span class="pre">URL</span></code> prompt, enter the provider’s base URL. Find the exact value in your provider’s API documentation. NemoClaw appends <code class="docutils literal notranslate"><span class="pre">/v1</span></code> automatically, so leave that suffix off.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">COMPATIBLE_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Other</span> <span class="pre">OpenAI-compatible</span> <span class="pre">endpoint</span> <span class="pre">model</span> <span class="pre">[]:</span></code> prompt, enter the model ID exactly as it appears in your provider’s model catalog (for example, <code class="docutils literal notranslate"><span class="pre">openai/gpt-5.4</span></code> on OpenRouter).</p></li>
+</ol>
+<p class="sd-card-text">NemoClaw sends a real inference request to validate the endpoint and model. NemoClaw forces the chat completions API for compatible endpoints because many backends advertise <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code> but mishandle the <code class="docutils literal notranslate"><span class="pre">developer</span></code> role used by the Responses API.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p class="sd-card-text">NVIDIA Nemotron models expose OpenAI-compatible APIs, so this option is the right choice for any Nemotron deployment that does not live on <code class="docutils literal notranslate"><span class="pre">build.nvidia.com</span></code>. Common examples include a self-hosted NIM container, an enterprise NVIDIA AI Enterprise gateway, or a vLLM/SGLang server running Nemotron weights. Point the base URL at your endpoint and enter the Nemotron model ID exactly as your server reports it.</p>
+</div>
+</div>
+</details><div class="docutils">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-server" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v4c0 .372-.116.717-.314 1 .198.283.314.628.314 1v4a1.75 1.75 0 0 1-1.75 1.75H1.75A1.75 1.75 0 0 1 0 12.75v-4c0-.358.109-.707.314-1a1.739 1.739 0 0 1-.314-1v-4C0 1.784.784 1 1.75 1ZM1.5 2.75v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm.25 5.75a.25.25 0 0 0-.25.25v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25ZM7 4.75A.75.75 0 0 1 7.75 4h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 7 4.75ZM7.75 10h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM3 4.75A.75.75 0 0 1 3.75 4h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 4.75ZM3.75 10h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"></path></svg></span><span class="sd-summary-text">Option 4: Anthropic</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to the Anthropic Messages API at <code class="docutils literal notranslate"><span class="pre">https://api.anthropic.com</span></code>.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY</span></code> for the API key. Get one from the <a class="reference external" href="https://console.anthropic.com/settings/keys" rel="noreferer noopener" target="_blank">Anthropic console keys page</a>.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">4</span></code> to select <strong>Anthropic</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">ANTHROPIC_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">model</span> <span class="pre">[1]:</span></code> prompt, pick a curated model (for example, <code class="docutils literal notranslate"><span class="pre">claude-sonnet-4-6</span></code>, <code class="docutils literal notranslate"><span class="pre">claude-haiku-4-5</span></code>, or <code class="docutils literal notranslate"><span class="pre">claude-opus-4-6</span></code>), or pick <strong>Other…</strong> to enter any Claude model ID.</p></li>
+</ol>
+</div>
+</details></div>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-link-external" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2Zm6.854-1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1Z"></path></svg></span><span class="sd-summary-text">Option 5: Other Anthropic-Compatible Endpoint</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to any server that implements the Anthropic Messages API at <code class="docutils literal notranslate"><span class="pre">/v1/messages</span></code>, including Claude proxies, Bedrock-compatible gateways, and self-hosted Anthropic-compatible servers.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">COMPATIBLE_ANTHROPIC_API_KEY</span></code> for the API key. Set it to whatever credential your endpoint expects.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">5</span></code> to select <strong>Other Anthropic-compatible endpoint</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Anthropic-compatible</span> <span class="pre">base</span> <span class="pre">URL</span></code> prompt, enter the proxy or gateway’s base URL from its documentation.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">COMPATIBLE_ANTHROPIC_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Other</span> <span class="pre">Anthropic-compatible</span> <span class="pre">endpoint</span> <span class="pre">model</span> <span class="pre">[]:</span></code> prompt, enter the model ID exactly as it appears in your gateway’s model catalog.</p></li>
+</ol>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-server" viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 1h12.5c.966 0 1.75.784 1.75 1.75v4c0 .372-.116.717-.314 1 .198.283.314.628.314 1v4a1.75 1.75 0 0 1-1.75 1.75H1.75A1.75 1.75 0 0 1 0 12.75v-4c0-.358.109-.707.314-1a1.739 1.739 0 0 1-.314-1v-4C0 1.784.784 1 1.75 1ZM1.5 2.75v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25Zm.25 5.75a.25.25 0 0 0-.25.25v4c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-4a.25.25 0 0 0-.25-.25ZM7 4.75A.75.75 0 0 1 7.75 4h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 7 4.75ZM7.75 10h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM3 4.75A.75.75 0 0 1 3.75 4h.5a.75.75 0 0 1 0 1.5h-.5A.75.75 0 0 1 3 4.75ZM3.75 10h.5a.75.75 0 0 1 0 1.5h-.5a.75.75 0 0 1 0-1.5Z"></path></svg></span><span class="sd-summary-text">Option 6: Google Gemini</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to Google’s OpenAI-compatible Gemini endpoint at <code class="docutils literal notranslate"><span class="pre">https://generativelanguage.googleapis.com/v1beta/openai/</span></code>.</p>
+<p class="sd-card-text">Use <code class="docutils literal notranslate"><span class="pre">GEMINI_API_KEY</span></code> for the API key. Get one from <a class="reference external" href="https://aistudio.google.com/app/apikey" rel="noreferer noopener" target="_blank">Google AI Studio API keys</a>.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">6</span></code> to select <strong>Google Gemini</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">GEMINI_API_KEY:</span></code> prompt, paste your key if it is not already exported.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">model</span> <span class="pre">[5]:</span></code> prompt, pick a curated model (for example, <code class="docutils literal notranslate"><span class="pre">gemini-3.1-pro-preview</span></code>, <code class="docutils literal notranslate"><span class="pre">gemini-3.1-flash-lite-preview</span></code>, <code class="docutils literal notranslate"><span class="pre">gemini-3-flash-preview</span></code>, <code class="docutils literal notranslate"><span class="pre">gemini-2.5-pro</span></code>, <code class="docutils literal notranslate"><span class="pre">gemini-2.5-flash</span></code>, or <code class="docutils literal notranslate"><span class="pre">gemini-2.5-flash-lite</span></code>), or pick <strong>Other…</strong> to enter any Gemini model ID.</p></li>
+</ol>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-cpu" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.5.75V2h3V.75a.75.75 0 0 1 1.5 0V2h1.25c.966 0 1.75.784 1.75 1.75V5h1.25a.75.75 0 0 1 0 1.5H14v3h1.25a.75.75 0 0 1 0 1.5H14v1.25A1.75 1.75 0 0 1 12.25 14H11v1.25a.75.75 0 0 1-1.5 0V14h-3v1.25a.75.75 0 0 1-1.5 0V14H3.75A1.75 1.75 0 0 1 2 12.25V11H.75a.75.75 0 0 1 0-1.5H2v-3H.75a.75.75 0 0 1 0-1.5H2V3.75C2 2.784 2.784 2 3.75 2H5V.75a.75.75 0 0 1 1.5 0Zm5.75 11.75a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25h-8.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25ZM5.75 5h4.5a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-.75.75h-4.5a.75.75 0 0 1-.75-.75v-4.5A.75.75 0 0 1 5.75 5Zm.75 4.5h3v-3h-3Z"></path></svg></span><span class="sd-summary-text">Option 7: Local Ollama</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Routes inference to a local Ollama instance on <code class="docutils literal notranslate"><span class="pre">localhost:11434</span></code>. This option only appears when Ollama is installed or running on the host.</p>
+<p class="sd-card-text">No API key is required. NemoClaw generates a token and starts an authenticated proxy so containers can reach Ollama without exposing it to your network.</p>
+<p class="sd-card-text">Respond to the wizard as follows.</p>
+<ol class="arabic simple">
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">[1]:</span></code> prompt, type <code class="docutils literal notranslate"><span class="pre">7</span></code> to select <strong>Local Ollama</strong>.</p></li>
+<li><p class="sd-card-text">At the <code class="docutils literal notranslate"><span class="pre">Choose</span> <span class="pre">model</span> <span class="pre">[1]:</span></code> prompt, pick from <strong>Ollama models</strong> if any are already installed. If none are installed, pick a <strong>starter model</strong> to pull and load now, or pick <strong>Other…</strong> to enter any Ollama model ID.</p></li>
+</ol>
+<p class="sd-card-text">For setup details, including GPU recommendations and starter model choices, refer to <a class="reference internal" href="../inference/use-local-inference.html"><span class="std std-doc">Use a Local Inference Server</span></a>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p class="sd-card-text">Ollama binds to <code class="docutils literal notranslate"><span class="pre">0.0.0.0</span></code> so the sandbox can reach it through Docker. On public WiFi, any device on the same network can send prompts to your GPU through the Ollama API. Refer to CNVD-2025-04094 and CVE-2024-37032.</p>
+</div>
+</div>
+</details><div class="docutils">
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+<span class="sd-summary-icon"><svg version="1.1" width="1.0em" height="1.0em" class="sd-octicon sd-octicon-beaker" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 5.782V2.5h-.25a.75.75 0 0 1 0-1.5h6.5a.75.75 0 0 1 0 1.5H11v3.282l3.666 5.76C15.619 13.04 14.543 15 12.767 15H3.233c-1.776 0-2.852-1.96-1.899-3.458Zm-2.4 6.565a.75.75 0 0 0 .633 1.153h9.534a.75.75 0 0 0 .633-1.153L12.225 10.5h-8.45ZM9.5 2.5h-3V6c0 .143-.04.283-.117.403L4.73 9h6.54L9.617 6.403A.746.746 0 0 1 9.5 6Z"></path></svg></span><span class="sd-summary-text">Experimental: Local NIM and Local vLLM</span><span class="sd-summary-state-marker sd-summary-chevron-right"><svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.72 18.78a.75.75 0 0 1 0-1.06L14.44 12 8.72 6.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0Z"></path></svg></span></summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">These options appear when <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_EXPERIMENTAL=1</span></code> is set and the prerequisites are met.</p>
+<ul class="simple">
+<li><p class="sd-card-text"><strong>Local NVIDIA NIM</strong> requires a NIM-capable GPU. NemoClaw pulls and manages a NIM container.</p></li>
+<li><p class="sd-card-text"><strong>Local vLLM</strong> requires a vLLM server already running on <code class="docutils literal notranslate"><span class="pre">localhost:8000</span></code>. NemoClaw auto-detects the loaded model.</p></li>
+</ul>
+<p class="sd-card-text">For setup, refer to <a class="reference internal" href="../inference/use-local-inference.html"><span class="std std-doc">Use a Local Inference Server</span></a>.</p>
+</div>
+</details></div>
+</section>
+<section id="review-the-configuration-before-the-sandbox-build">
+<h3>Review the Configuration Before the Sandbox Build<a class="headerlink" href="#review-the-configuration-before-the-sandbox-build" title="Link to this heading">#</a></h3>
+<p>After you enter the sandbox name, the wizard prints a review summary and asks for final confirmation before starting the destructive sandbox image build. For example, if you picked NVIDIA Endpoints, the summary looks like the following:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>  ──────────────────────────────────────────────────
+  Review configuration
+  ──────────────────────────────────────────────────
+  Provider:      nvidia-api
+  Model:         nvidia/nemotron-3-super-120b-a12b
+  API key:       NVIDIA_API_KEY (registered with the OpenShell gateway)
+  Web search:    disabled
+  Messaging:     none
+  Sandbox name:  my-assistant
+  ──────────────────────────────────────────────────
+  Apply this configuration? [Y/n]:
+</pre></div>
+</div>
+<p>The default is <code class="docutils literal notranslate"><span class="pre">Y</span></code>, so you can press Enter once to continue. Answer <code class="docutils literal notranslate"><span class="pre">n</span></code> to abort cleanly, fix the entries, and re-run <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code>.</p>
+<p>Non-interactive runs (<code class="docutils literal notranslate"><span class="pre">NEMOCLAW_NON_INTERACTIVE=1</span></code>) print the summary for log clarity but skip the prompt.</p>
+<p>When the install completes, a summary confirms the running environment.
+The <code class="docutils literal notranslate"><span class="pre">Model</span></code> and provider line reflects the inference option you picked during onboarding.
+The example below shows the result if you picked NVIDIA Endpoints during onboarding.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>──────────────────────────────────────────────────
+Sandbox      my-assistant (Landlock + seccomp + netns)
+Model        nvidia/nemotron-3-super-120b-a12b (NVIDIA Endpoints)
+──────────────────────────────────────────────────
+Run:         nemoclaw my-assistant connect
+Status:      nemoclaw my-assistant status
+Logs:        nemoclaw my-assistant logs --follow
+──────────────────────────────────────────────────
+
+[INFO]  === Installation complete ===
+</pre></div>
+</div>
+<p>If you picked a different option, the <code class="docutils literal notranslate"><span class="pre">Model</span></code> line shows that provider’s model and label instead. For example, you might see <code class="docutils literal notranslate"><span class="pre">gpt-5.4</span> <span class="pre">(OpenAI)</span></code>, <code class="docutils literal notranslate"><span class="pre">claude-sonnet-4-6</span> <span class="pre">(Anthropic)</span></code>, <code class="docutils literal notranslate"><span class="pre">gemini-2.5-flash</span> <span class="pre">(Google</span> <span class="pre">Gemini)</span></code>, <code class="docutils literal notranslate"><span class="pre">llama3.1:8b</span> <span class="pre">(Local</span> <span class="pre">Ollama)</span></code>, or <code class="docutils literal notranslate"><span class="pre">&lt;your-model&gt;</span> <span class="pre">(Other</span> <span class="pre">OpenAI-compatible</span> <span class="pre">endpoint)</span></code>.</p>
+</section>
+</section>
+<section id="open-the-openclaw-ui-in-a-browser">
+<h2>Open the OpenClaw UI in a Browser<a class="headerlink" href="#open-the-openclaw-ui-in-a-browser" title="Link to this heading">#</a></h2>
+<p>The onboard wizard automatically starts an SSH port forward from your host’s <code class="docutils literal notranslate"><span class="pre">127.0.0.1:18789</span></code> to the sandbox dashboard, then prints a tokenized URL in the install summary.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>──────────────────────────────────────────────────
+OpenClaw UI (tokenized URL; treat it like a password; save it now - it will not be printed again)
+Port 18789 must be forwarded before opening these URLs.
+Dashboard: http://127.0.0.1:18789/#token=&lt;auth-token&gt;
+──────────────────────────────────────────────────
+</pre></div>
+</div>
+<p>Open that URL in your browser. The <code class="docutils literal notranslate"><span class="pre">#token=&lt;auth-token&gt;</span></code> fragment authenticates the browser to the sandbox gateway, so save the URL securely and treat it like a password. NemoClaw prints the token only once.</p>
+<section id="restart-the-port-forward">
+<h3>Restart the Port Forward<a class="headerlink" href="#restart-the-port-forward" title="Link to this heading">#</a></h3>
+<p>If the forward stopped (for example, after a reboot) or you opened a new terminal and the URL no longer responds, restart it manually.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openshell<span class="w"> </span>forward<span class="w"> </span>start<span class="w"> </span>--background<span class="w"> </span><span class="m">18789</span><span class="w"> </span>my-assistant
+</pre></div>
+</div>
+<p>To list active forwards across all sandboxes, run the following command.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openshell<span class="w"> </span>forward<span class="w"> </span>list
+</pre></div>
+</div>
+</section>
+<section id="run-multiple-sandboxes">
+<h3>Run Multiple Sandboxes<a class="headerlink" href="#run-multiple-sandboxes" title="Link to this heading">#</a></h3>
+<p>Each sandbox needs its own dashboard port, since <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">forward</span></code> refuses to bind a port that another sandbox is already using.
+When the default port is already held by another sandbox, <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> scans ports <code class="docutils literal notranslate"><span class="pre">18789</span></code> through <code class="docutils literal notranslate"><span class="pre">18799</span></code> and uses the next free port.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard<span class="w">                                            </span><span class="c1"># first sandbox uses 18789</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard<span class="w">                                            </span><span class="c1"># second sandbox uses the next free port</span>
+</pre></div>
+</div>
+<p>To choose a specific port, pass <code class="docutils literal notranslate"><span class="pre">--control-ui-port</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard<span class="w"> </span>--control-ui-port<span class="w"> </span><span class="m">19000</span>
+</pre></div>
+</div>
+<p>You can also set <code class="docutils literal notranslate"><span class="pre">CHAT_UI_URL</span></code> or <code class="docutils literal notranslate"><span class="pre">NEMOCLAW_DASHBOARD_PORT</span></code> before onboarding:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nv">CHAT_UI_URL</span><span class="o">=</span>http://127.0.0.1:19000<span class="w"> </span>nemoclaw<span class="w"> </span>onboard
+<span class="gp">$ </span><span class="nv">NEMOCLAW_DASHBOARD_PORT</span><span class="o">=</span><span class="m">19000</span><span class="w"> </span>nemoclaw<span class="w"> </span>onboard
+</pre></div>
+</div>
+<p>For full details on port conflicts and overrides, refer to <a class="reference internal" href="../reference/troubleshooting.html#port-already-in-use"><span class="std std-ref">Port already in use</span></a>.</p>
+</section>
+<section id="open-the-ui-from-a-remote-host">
+<h3>Open the UI from a Remote Host<a class="headerlink" href="#open-the-ui-from-a-remote-host" title="Link to this heading">#</a></h3>
+<p>If NemoClaw is running on a remote GPU instance and you want to open the UI from a laptop, refer to <a class="reference internal" href="../deployment/deploy-to-remote-gpu.html#remote-dashboard-access"><span class="std std-ref">Remote Dashboard Access</span></a>. Set <code class="docutils literal notranslate"><span class="pre">CHAT_UI_URL</span></code> to the origin the browser uses before running onboard, so the gateway’s CORS allowlist accepts the remote browser.</p>
+</section>
+</section>
+<section id="chat-with-the-agent-from-the-terminal">
+<h2>Chat with the Agent from the Terminal<a class="headerlink" href="#chat-with-the-agent-from-the-terminal" title="Link to this heading">#</a></h2>
+<p>If you prefer a terminal-based chat, connect to the sandbox and use the OpenClaw CLI.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nemoclaw<span class="w"> </span>my-assistant<span class="w"> </span>connect
+</pre></div>
+</div>
+<p>In the sandbox shell, open the OpenClaw terminal UI and start a chat.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openclaw<span class="w"> </span>tui
+</pre></div>
+</div>
+<p>Alternatively, send a single message and print the response.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>openclaw<span class="w"> </span>agent<span class="w"> </span>--agent<span class="w"> </span>main<span class="w"> </span>--local<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--session-id<span class="w"> </span><span class="nb">test</span>
+</pre></div>
+</div>
+</section>
+<section id="reconfigure-or-recover">
+<h2>Reconfigure or Recover<a class="headerlink" href="#reconfigure-or-recover" title="Link to this heading">#</a></h2>
+<p>Recover from a misconfigured sandbox without re-running the full onboard wizard or destroying workspace state.</p>
+<section id="change-inference-model-or-api">
+<h3>Change Inference Model or API<a class="headerlink" href="#change-inference-model-or-api" title="Link to this heading">#</a></h3>
+<p>Change the active model or provider at runtime without rebuilding the sandbox:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>openshell<span class="w"> </span>inference<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-g<span class="w"> </span>nemoclaw<span class="w"> </span>--model<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--provider<span class="w"> </span>&lt;provider&gt;
+</pre></div>
+</div>
+<p>Refer to <a class="reference internal" href="../inference/switch-inference-providers.html"><span class="std std-doc">Switch inference providers</span></a> for provider-specific model IDs and API compatibility notes.</p>
+</section>
+<section id="reset-a-stored-credential">
+<h3>Reset a Stored Credential<a class="headerlink" href="#reset-a-stored-credential" title="Link to this heading">#</a></h3>
+<p>If a provider credential was entered incorrectly during onboarding, clear the gateway-registered value and re-enter it on the next onboard run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>credentials<span class="w"> </span>list<span class="w">                </span><span class="c1"># see which providers are registered</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>credentials<span class="w"> </span>reset<span class="w"> </span>&lt;PROVIDER&gt;<span class="w">    </span><span class="c1"># clear a single provider, for example nvidia-prod</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>onboard<span class="w">                         </span><span class="c1"># re-run to re-enter the cleared provider</span>
+</pre></div>
+</div>
+<p>The credentials command is documented in full at <a class="reference internal" href="../reference/commands.html#nemoclaw-credentials-reset-provider"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">credentials</span> <span class="pre">reset</span> <span class="pre">&lt;PROVIDER&gt;</span></code></span></a>.</p>
+</section>
+<section id="rebuild-a-sandbox-while-preserving-workspace-state">
+<h3>Rebuild a Sandbox While Preserving Workspace State<a class="headerlink" href="#rebuild-a-sandbox-while-preserving-workspace-state" title="Link to this heading">#</a></h3>
+<p>If you changed the underlying Dockerfile, upgraded OpenClaw, or want to pick up a new base image without losing your sandbox’s workspace files, use <code class="docutils literal notranslate"><span class="pre">rebuild</span></code> instead of destroying and recreating:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>&lt;sandbox-name&gt;<span class="w"> </span>rebuild
+</pre></div>
+</div>
+<p>Rebuild preserves the mounted workspace and registered policies while recreating the container. Refer to <a class="reference internal" href="../reference/commands.html#nemoclaw-name-rebuild"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">&lt;name&gt;</span> <span class="pre">rebuild</span></code></span></a> for flag details.</p>
+</section>
+<section id="add-a-network-preset-after-onboarding">
+<h3>Add a Network Preset After Onboarding<a class="headerlink" href="#add-a-network-preset-after-onboarding" title="Link to this heading">#</a></h3>
+<p>Apply an additional preset (for example, Telegram or GitHub) to a running sandbox without re-onboarding:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>&lt;sandbox-name&gt;<span class="w"> </span>policy-add
+</pre></div>
+</div>
+<p>Refer to <a class="reference internal" href="../reference/commands.html#nemoclaw-name-policy-add"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">&lt;name&gt;</span> <span class="pre">policy-add</span></code></span></a> for usage details and flags.</p>
+</section>
+</section>
+<section id="update-to-the-latest-version">
+<h2>Update to the Latest Version<a class="headerlink" href="#update-to-the-latest-version" title="Link to this heading">#</a></h2>
+<p>When a new NemoClaw release becomes available, update the <code class="docutils literal notranslate"><span class="pre">nemoclaw</span></code> CLI on your host and check existing sandboxes for stale agent/runtime versions.</p>
+<section id="update-the-nemoclaw-cli">
+<h3>Update the NemoClaw CLI<a class="headerlink" href="#update-the-nemoclaw-cli" title="Link to this heading">#</a></h3>
+<p>Re-run the installer.
+Before it onboards anything, the installer calls <a class="reference internal" href="../reference/commands.html#nemoclaw-backup-all"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">backup-all</span></code></span></a> automatically, storing a snapshot of each running sandbox in <code class="docutils literal notranslate"><span class="pre">~/.nemoclaw/rebuild-backups/</span></code> as a safety net.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://www.nvidia.com/nemoclaw.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</pre></div>
+</div>
+</section>
+<section id="upgrade-sandboxes-with-stale-agent-and-runtime-versions">
+<h3>Upgrade sandboxes with stale agent and runtime versions<a class="headerlink" href="#upgrade-sandboxes-with-stale-agent-and-runtime-versions" title="Link to this heading">#</a></h3>
+<p>The installer checks registered sandboxes after onboarding succeeds and runs <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">upgrade-sandboxes</span> <span class="pre">--auto</span></code> for stale running sandboxes. Use <code class="docutils literal notranslate"><span class="pre">upgrade-sandboxes</span></code> directly to verify the result, rebuild when you skipped the installer or onboarding step, or handle sandboxes that were stopped or could not be version-checked. The upgrade flow is non-destructive by default because NemoClaw preserves manifest-defined workspace state, but a manual snapshot before any major upgrade gives you a state restore point.</p>
+<p><strong>Safe upgrade flow:</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>&lt;sandbox-name&gt;<span class="w"> </span>snapshot<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>pre-upgrade<span class="w">   </span><span class="c1"># optional, recommended</span>
+<span class="gp">$ </span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://www.nvidia.com/nemoclaw.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash<span class="w">          </span><span class="c1"># updates CLI; auto-upgrades stale running sandboxes</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>upgrade-sandboxes<span class="w"> </span>--check<span class="w">                            </span><span class="c1"># verify or list remaining stale/unknown sandboxes</span>
+<span class="gp">$ </span>nemoclaw<span class="w"> </span>upgrade-sandboxes<span class="w">                                    </span><span class="c1"># manually rebuild remaining stale running sandboxes</span>
+</pre></div>
+</div>
+<p>For scripted manual rebuilds, use <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">upgrade-sandboxes</span> <span class="pre">--auto</span></code> to skip the confirmation prompt.</p>
+<p>If the upgraded sandbox needs its workspace state reverted, restore the pre-upgrade snapshot into the running sandbox. This restores saved state directories only; it does not downgrade the sandbox image or agent/runtime:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>nemoclaw<span class="w"> </span>&lt;sandbox-name&gt;<span class="w"> </span>snapshot<span class="w"> </span>restore<span class="w"> </span>pre-upgrade
+</pre></div>
+</div>
+<section id="what-changes-during-a-rebuild">
+<h4>What changes during a rebuild<a class="headerlink" href="#what-changes-during-a-rebuild" title="Link to this heading">#</a></h4>
+<p>Each rebuild destroys the existing container and creates a new one. NemoClaw protects your data through the same backup-and-restore flow as <a class="reference internal" href="../reference/commands.html#nemoclaw-name-rebuild"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">&lt;name&gt;</span> <span class="pre">rebuild</span></code></span></a>:</p>
+<ul class="simple">
+<li><p>NemoClaw preserves manifest-defined workspace state. Before deleting the old container, NemoClaw snapshots the state directories defined in the agent manifest (typically <code class="docutils literal notranslate"><span class="pre">/sandbox/.openclaw/workspace/</span></code>) and restores them into the new container. Stored credentials (<code class="docutils literal notranslate"><span class="pre">~/.nemoclaw/credentials.json</span></code>) and registered policy presets live on the host and are re-applied to the new sandbox automatically.</p></li>
+<li><p>NemoClaw does not preserve runtime changes outside the workspace state directories. This includes packages installed inside the running container with <code class="docutils literal notranslate"><span class="pre">apt</span></code> or <code class="docutils literal notranslate"><span class="pre">pip</span></code>, files in non-workspace paths, and in-memory or process state. If you have customized the running container at runtime, capture that as <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> changes (for <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span> <span class="pre">--from</span></code>) or a manual <code class="docutils literal notranslate"><span class="pre">openshell</span> <span class="pre">sandbox</span> <span class="pre">download</span></code> before the rebuild starts.</p></li>
+</ul>
+<p>Aborts before the destroy step are non-destructive. The flow refuses to proceed past preflight if a credential is missing (see below) or past backup if the snapshot fails (with <code class="docutils literal notranslate"><span class="pre">&quot;Aborting</span> <span class="pre">rebuild</span> <span class="pre">to</span> <span class="pre">prevent</span> <span class="pre">data</span> <span class="pre">loss&quot;</span></code>), so a botched run leaves the original sandbox intact and ready to retry.</p>
+<p>See <a class="reference internal" href="../workspace/backup-restore.html"><span class="std std-doc">Backup and Restore</span></a> for the full list of state-preservation guarantees, snapshot retention, and instructions for manual backups when the auto-flow is not enough.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the rebuild aborts with <code class="docutils literal notranslate"><span class="pre">Missing</span> <span class="pre">credential:</span> <span class="pre">&lt;KEY&gt;</span></code>
+The rebuild preflight reads the provider credential recorded by your last <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> session. If you have switched providers since onboarding (for example, from a remote API to a local Ollama setup) the preflight may still reference the old key and fail before any destroy step runs.</p>
+<p>To recover, re-run <code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">onboard</span></code> and select your current provider. This refreshes the session metadata. Your existing container keeps serving traffic until the new image is ready.</p>
+</div>
+</section>
+</section>
+</section>
+<section id="uninstall">
+<h2>Uninstall<a class="headerlink" href="#uninstall" title="Link to this heading">#</a></h2>
+<p>To remove NemoClaw and all resources created during setup, run the CLI’s built-in uninstall command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nemoclaw<span class="w"> </span>uninstall
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Flag</p></th>
+<th class="head"><p>Effect</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--yes</span></code></p></td>
+<td><p>Skip the confirmation prompt.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--keep-openshell</span></code></p></td>
+<td><p>Leave the <code class="docutils literal notranslate"><span class="pre">openshell</span></code> binary installed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--delete-models</span></code></p></td>
+<td><p>Also remove NemoClaw-pulled Ollama models.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">uninstall</span></code> runs the version-pinned <code class="docutils literal notranslate"><span class="pre">uninstall.sh</span></code> that shipped with your installed CLI, so it does not fetch anything over the network at uninstall time.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">nemoclaw</span></code> CLI is missing or broken, fall back to the hosted script:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/NVIDIA/NemoClaw/refs/heads/main/uninstall.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+</pre></div>
+</div>
+<p>For a full comparison of the two forms — what they fetch, what they trust, and when to prefer each — see <a class="reference internal" href="../reference/commands.html#nemoclaw-uninstall-vs-the-hosted-uninstall-sh"><span class="std std-ref"><code class="docutils literal notranslate"><span class="pre">nemoclaw</span> <span class="pre">uninstall</span></code> vs. the hosted <code class="docutils literal notranslate"><span class="pre">uninstall.sh</span></code></span></a>.</p>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../inference/switch-inference-providers.html"><span class="std std-doc">Switch inference providers</span></a> to use a different model or endpoint.</p></li>
+<li><p><a class="reference internal" href="../network-policy/approve-network-requests.html"><span class="std std-doc">Approve or deny network requests</span></a> when the agent tries to reach external hosts.</p></li>
+<li><p><a class="reference internal" href="../network-policy/customize-network-policy.html"><span class="std std-doc">Customize the network policy</span></a> to pre-approve trusted domains.</p></li>
+<li><p><a class="reference internal" href="../deployment/deploy-to-remote-gpu.html"><span class="std std-doc">Deploy to a remote GPU instance</span></a> for always-on operation.</p></li>
+<li><p><a class="reference internal" href="../monitoring/monitor-sandbox-activity.html"><span class="std std-doc">Monitor sandbox activity</span></a> through the OpenShell TUI.</p></li>
+<li><p><a class="reference internal" href="../reference/troubleshooting.html"><span class="std std-doc">Consult the troubleshooting guide</span></a> for common error messages and resolution steps.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="windows-preparation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Prepare Windows for NemoClaw</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../inference/inference-options.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Inference Options</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+
+
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#install-nemoclaw-and-onboard-openclaw-agent">Install NemoClaw and Onboard OpenClaw Agent</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#respond-to-the-onboard-wizard">Respond to the Onboard Wizard</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#review-the-configuration-before-the-sandbox-build">Review the Configuration Before the Sandbox Build</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#open-the-openclaw-ui-in-a-browser">Open the OpenClaw UI in a Browser</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#restart-the-port-forward">Restart the Port Forward</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-multiple-sandboxes">Run Multiple Sandboxes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#open-the-ui-from-a-remote-host">Open the UI from a Remote Host</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#chat-with-the-agent-from-the-terminal">Chat with the Agent from the Terminal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reconfigure-or-recover">Reconfigure or Recover</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#change-inference-model-or-api">Change Inference Model or API</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reset-a-stored-credential">Reset a Stored Credential</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rebuild-a-sandbox-while-preserving-workspace-state">Rebuild a Sandbox While Preserving Workspace State</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-a-network-preset-after-onboarding">Add a Network Preset After Onboarding</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#update-to-the-latest-version">Update to the Latest Version</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#update-the-nemoclaw-cli">Update the NemoClaw CLI</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#upgrade-sandboxes-with-stale-agent-and-runtime-versions">Upgrade sandboxes with stale agent and runtime versions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changes-during-a-rebuild">What changes during a rebuild</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#uninstall">Uninstall</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next Steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+<a class="footer-brand logo" href="https://www.nvidia.com">
+  <img src="../_static/nvidia-logo-horiz-rgb-1c-blk-for-screen.svg" class="logo__image only-light" alt="NVIDIA"/>
+  <img src="../_static/nvidia-logo-horiz-rgb-1c-wht-for-screen.svg" class="logo__image only-dark" alt="NVIDIA"/>
+</a></div>
+      
+        <div class="footer-item">
+
+<div class="footer-links">
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/">Privacy Policy</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/privacy-center/">Your Privacy Choices</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/">Terms of Service</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/accessibility/">Accessibility</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/about-nvidia/company-policies/">Corporate Policies</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/product-security/">Product Security</a>
+   | 
+  
+  
+  
+  <a class="external" href="https://www.nvidia.com/en-us/contact/">Contact</a>
+  
+  
+  
+</div>
+</div>
+      
+        <div class="footer-item">
+
+
+
+
+  <p class="copyright">
+    
+      Copyright © 2026, NVIDIA Corporation.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+<script type="text/javascript">if (typeof _satellite !== "undefined") {_satellite.pageBottom();}</script>
+
+  </body>
+</html>
