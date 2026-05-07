@@ -43,5 +43,11 @@ network_policies:
         access: full
         tls: skip
     binaries:
+      - { path: /usr/local/bin/hermes }
+      - { path: /usr/bin/python3 }
+      - { path: /usr/bin/python3.11 }
+      - { path: /opt/hermes/.venv/bin/python }
+      - { path: /usr/local/bin/python3 }
+      - { path: /usr/local/bin/python3.11 }
       - { path: /usr/local/bin/node }
       - { path: /usr/bin/node }

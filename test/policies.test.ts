@@ -183,6 +183,10 @@ describe("policies", () => {
     it("includes /usr/bin/node in communication presets", () => {
       for (const preset of ["discord", "slack", "telegram"]) {
         const content = requirePresetContent(policies.loadPreset(preset));
+        expect(content).toContain("/usr/local/bin/hermes");
+        expect(content).toContain("/usr/bin/python3");
+        expect(content).toContain("/usr/bin/python3.11");
+        expect(content).toContain("/opt/hermes/.venv/bin/python");
         expect(content).toContain("/usr/local/bin/node");
         expect(content).toContain("/usr/bin/node");
       }
