@@ -149,6 +149,7 @@ const {
 
 const onboardProviders = require("./onboard/providers");
 const hermesProviderAuth = require("./hermes-provider-auth");
+const hermesBroker = require("./hermes-tool-gateway-broker");
 
 const CUSTOM_BUILD_CONTEXT_WARN_BYTES = 100_000_000;
 const CUSTOM_BUILD_CONTEXT_IGNORES = new Set([
@@ -314,6 +315,7 @@ import type { AgentDefinition } from "./agent/defs";
 import type { CurlProbeResult } from "./http-probe";
 import type { GatewayInference, ProviderSelectionConfig } from "./inference/config";
 import type { GpuInfo, ValidationResult } from "./inference/local";
+import type { WebSearchConfig } from "./inference/web-search";
 import {
   hydrateMessagingChannelConfig,
   type MessagingChannelConfig,
@@ -322,22 +324,21 @@ import {
   readMessagingChannelConfigFromEnv,
   sanitizeMessagingChannelConfig,
 } from "./messaging-channel-config";
-import type { ContainerRuntime } from "./platform";
-import type { Session, SessionUpdates } from "./state/onboard-session";
 import type {
   ModelCatalogFetchResult,
   ModelValidationResult,
   ProbeResult,
   ValidationFailureLike,
 } from "./onboard/types";
+import type { ContainerRuntime } from "./platform";
 import { listChannels } from "./sandbox-channels";
 import type { StreamSandboxCreateResult } from "./sandbox-create-stream";
+import type { Session, SessionUpdates } from "./state/onboard-session";
 import type { SandboxEntry } from "./state/registry";
 import type { BackupResult } from "./state/sandbox";
 import type { TierDefinition, TierPreset } from "./tiers";
 import type { SandboxCreateFailure, ValidationClassification } from "./validation";
 import type { ProbeRecovery } from "./validation-recovery";
-import type { WebSearchConfig } from "./inference/web-search";
 
 /**
  * Create a temp file inside a directory with a cryptographically random name.
@@ -2786,6 +2787,7 @@ function patchStagedDockerfile(
   discordGuilds: LooseObject = {},
   baseImageRef: string | null = null,
   telegramConfig: LooseObject = {},
+  hermesToolGateways: string[] = [],
 ) {
   const { providerKey, primaryModelRef, inferenceBaseUrl, inferenceApi, inferenceCompat } =
     getSandboxInferenceConfig(model, provider, preferredInferenceApi);
@@ -2943,6 +2945,14 @@ function patchStagedDockerfile(
       `ARG NEMOCLAW_TELEGRAM_CONFIG_B64=${encodeDockerJsonArg(telegramConfig)}`,
     );
   }
+  dockerfile = dockerfile.replace(
+    /^ARG NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64=.*$/m,
+    `ARG NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64=${encodeDockerJsonArg(hermesToolGateways)}`,
+  );
+  dockerfile = dockerfile.replace(
+    /^ARG NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER=.*$/m,
+    `ARG NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER=${hermesToolGateways.length > 0 ? "1" : "0"}`,
+  );
   fs.writeFileSync(dockerfilePath, dockerfile);
 }
 
@@ -4899,6 +4909,7 @@ async function createSandbox(
   agent: AgentDefinition | null = null,
   controlUiPort: number | null = null,
   gpuPassthrough: boolean = false,
+  hermesToolGateways: string[] = [],
 ) {
   step(6, 8, "Creating sandbox");
 
@@ -5518,6 +5529,13 @@ async function createSandbox(
   for (const p of messagingProviders) {
     createArgs.push("--provider", p);
   }
+  if (
+    provider === hermesProviderAuth.HERMES_PROVIDER_NAME &&
+    Array.isArray(hermesToolGateways) &&
+    hermesToolGateways.length > 0
+  ) {
+    createArgs.push("--provider", hermesBroker.getHermesToolBrokerProviderName(sandboxName));
+  }
 
   console.log(`  Creating sandbox '${sandboxName}' (this takes a few minutes on first run)...`);
   const messagingChannelConfig = readMessagingChannelConfigFromEnv();
@@ -5628,6 +5646,7 @@ async function createSandbox(
     discordGuilds,
     resolved ? resolved.ref : null,
     telegramConfig,
+    hermesToolGateways,
   );
   // Only pass non-sensitive env vars to the sandbox. Credentials flow through
   // OpenShell providers — the gateway injects them as placeholders and the L7
@@ -5873,6 +5892,7 @@ async function createSandbox(
     policies: initialSandboxPolicy.appliedPresets,
     messagingChannels: activeMessagingChannels,
     messagingChannelConfig: messagingChannelConfig || undefined,
+    hermesToolGateways,
     disabledChannels: disabledChannels.length > 0 ? [...disabledChannels] : undefined,
     dashboardPort: actualDashboardPort,
   });
@@ -7434,9 +7454,11 @@ async function setupInference(
               apiKey: hydrateCredentialEnv(credentialEnv || HERMES_NOUS_API_KEY_CREDENTIAL_ENV),
               runOpenshell,
             })
-          : await hermesProviderAuth.ensureHermesProviderOAuthCredentials(targetSandbox, {
+          : await hermesBroker.ensureHermesProviderHostCredentials(targetSandbox, {
+              authMethod: HERMES_AUTH_METHOD_OAUTH,
               allowInteractiveLogin: !isNonInteractive(),
               runOpenshell,
+              log: note,
             });
       if (!state) {
         const authLabel = hermesAuthMethodLabel(resolvedHermesAuthMethod);
@@ -7755,6 +7777,64 @@ async function setupInference(
 // ── Step 6: Messaging channels ───────────────────────────────────
 
 const MESSAGING_CHANNELS = listChannels();
+
+const HERMES_TOOL_GATEWAY_OPTIONS = [
+  { name: "nous-web", description: "Nous-managed web search and crawl tools" },
+  { name: "nous-audio", description: "Nous-managed audio generation and transcription tools" },
+  { name: "nous-browser", description: "Nous-managed cloud browser automation tools" },
+  { name: "nous-image", description: "Nous-managed image generation tools" },
+  { name: "nous-code", description: "Nous-managed Modal code execution tools" },
+];
+const HERMES_TOOL_GATEWAY_NAMES = new Set(HERMES_TOOL_GATEWAY_OPTIONS.map((option) => option.name));
+
+function parseHermesToolGatewayEnv(raw: string | null | undefined): string[] {
+  return String(raw || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value && HERMES_TOOL_GATEWAY_NAMES.has(value));
+}
+
+async function setupHermesToolGateways(
+  agent: AgentDefinition | null,
+  provider: string | null,
+  hermesAuthMethod: HermesAuthMethod | string | null,
+  existing: string[] | null = null,
+): Promise<string[]> {
+  if (agent?.name !== "hermes" || provider !== hermesProviderAuth.HERMES_PROVIDER_NAME) return [];
+
+  const envSelection =
+    process.env.NEMOCLAW_HERMES_TOOL_GATEWAYS ||
+    process.env.NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS ||
+    "";
+  if (normalizeHermesAuthMethod(hermesAuthMethod) === HERMES_AUTH_METHOD_API_KEY) {
+    const selected = parseHermesToolGatewayEnv(envSelection);
+    if (selected.length > 0 || (Array.isArray(existing) && existing.length > 0)) {
+      note(
+        "  Hermes managed tools require Nous Portal OAuth. Skipping tool gateway selection for Nous API Key auth.",
+      );
+    }
+    return [];
+  }
+
+  const envPresets = parseHermesToolGatewayEnv(envSelection);
+  if (envPresets.length > 0) {
+    note(`  Hermes managed tools: ${envPresets.join(", ")}`);
+    return envPresets;
+  }
+  if (isNonInteractive()) {
+    return Array.isArray(existing) ? existing : [];
+  }
+
+  console.log("");
+  console.log("  Hermes Tool Gateway services — optional Nous-managed tools:");
+  const initial = Array.isArray(existing) ? existing : ["nous-web", "nous-browser"];
+  return presetsCheckboxSelector(HERMES_TOOL_GATEWAY_OPTIONS, initial);
+}
+
+function removeHermesToolGatewayPresets(presets: string[] | null | undefined): string[] | null {
+  if (!Array.isArray(presets)) return null;
+  return presets.filter((preset) => !HERMES_TOOL_GATEWAY_NAMES.has(preset));
+}
 
 function getStoredMessagingChannelConfig(
   sandboxName: string | null,
@@ -8123,10 +8203,12 @@ function getSuggestedPolicyPresets({
   enabledChannels = null,
   webSearchConfig = null,
   provider = null,
+  hermesToolGateways = null,
 }: {
   enabledChannels?: string[] | null;
   webSearchConfig?: WebSearchConfig | null;
   provider?: string | null;
+  hermesToolGateways?: string[] | null;
 } = {}): string[] {
   const suggestions = ["pypi", "npm"];
 
@@ -8154,6 +8236,11 @@ function getSuggestedPolicyPresets({
   maybeSuggestMessagingPreset("discord", "DISCORD_BOT_TOKEN");
 
   if (webSearchConfig) suggestions.push("brave");
+  if (Array.isArray(hermesToolGateways)) {
+    for (const name of hermesToolGateways) {
+      if (!suggestions.includes(name)) suggestions.push(name);
+    }
+  }
 
   return suggestions;
 }
@@ -8791,10 +8878,16 @@ function computeSetupPresetSuggestions(
     enabledChannels?: string[] | null;
     webSearchConfig?: WebSearchConfig | null;
     provider?: string | null;
+    hermesToolGateways?: string[] | null;
     knownPresetNames?: string[] | null;
   } = {},
 ): string[] {
-  const { enabledChannels = null, webSearchConfig = null, provider = null } = options;
+  const {
+    enabledChannels = null,
+    webSearchConfig = null,
+    provider = null,
+    hermesToolGateways = null,
+  } = options;
   const known = Array.isArray(options.knownPresetNames) ? new Set(options.knownPresetNames) : null;
   const suggestions = tiers.resolveTierPresets(tierName).map((p) => p.name);
   const add = (name: string) => {
@@ -8807,6 +8900,9 @@ function computeSetupPresetSuggestions(
   if (Array.isArray(enabledChannels)) {
     for (const channel of enabledChannels) add(channel);
   }
+  if (Array.isArray(hermesToolGateways)) {
+    for (const preset of hermesToolGateways) add(preset);
+  }
   return suggestions;
 }
 
@@ -8818,6 +8914,7 @@ async function setupPoliciesWithSelection(
     webSearchConfig?: WebSearchConfig | null;
     enabledChannels?: string[] | null;
     provider?: string | null;
+    hermesToolGateways?: string[] | null;
     knownPresetNames?: string[];
   } = {},
 ) {
@@ -8826,6 +8923,9 @@ async function setupPoliciesWithSelection(
   const webSearchConfig = options.webSearchConfig || null;
   const enabledChannels = Array.isArray(options.enabledChannels) ? options.enabledChannels : null;
   const provider = options.provider || null;
+  const hermesToolGateways = Array.isArray(options.hermesToolGateways)
+    ? options.hermesToolGateways
+    : null;
 
   step(8, 8, "Policy presets");
 
@@ -8852,6 +8952,7 @@ async function setupPoliciesWithSelection(
     enabledChannels,
     webSearchConfig,
     provider,
+    hermesToolGateways,
     knownPresetNames: allPresets.map((p) => p.name),
   });
 
@@ -9614,6 +9715,7 @@ function toSessionUpdates(
     preferredInferenceApi?: string | null;
     nimContainer?: string | null;
     webSearchConfig?: WebSearchConfig | null;
+    hermesToolGateways?: string[] | null;
     policyPresets?: string[] | null;
     messagingChannels?: string[] | null;
     messagingChannelConfig?: MessagingChannelConfig | null;
@@ -9636,6 +9738,7 @@ function toSessionUpdates(
   if (updates.nimContainer !== undefined)
     normalized.nimContainer = toOptionalString(updates.nimContainer);
   if (updates.webSearchConfig !== undefined) normalized.webSearchConfig = updates.webSearchConfig;
+  if (updates.hermesToolGateways) normalized.hermesToolGateways = updates.hermesToolGateways;
   if (updates.policyPresets) normalized.policyPresets = updates.policyPresets;
   if (updates.messagingChannels) normalized.messagingChannels = updates.messagingChannels;
   if (updates.messagingChannelConfig !== undefined) {
@@ -10178,6 +10281,9 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
         : null);
     let preferredInferenceApi = session?.preferredInferenceApi || null;
     let nimContainer = session?.nimContainer || null;
+    let hermesToolGateways = Array.isArray(session?.hermesToolGateways)
+      ? session.hermesToolGateways
+      : [];
     let webSearchConfig = session?.webSearchConfig || null;
     let forceProviderSelection = false;
     while (true) {
@@ -10440,10 +10546,17 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
       } else {
         selectedMessagingChannels = await setupMessagingChannels();
       }
+      hermesToolGateways = await setupHermesToolGateways(
+        agent,
+        provider,
+        hermesAuthMethod,
+        hermesToolGateways,
+      );
       const messagingChannelConfig = readMessagingChannelConfigFromEnv();
       onboardSession.updateSession((current: Session) => {
         current.messagingChannels = selectedMessagingChannels;
         current.messagingChannelConfig = messagingChannelConfig;
+        current.hermesToolGateways = hermesToolGateways;
         return current;
       });
       if (typeof model !== "string" || typeof provider !== "string") {
@@ -10462,6 +10575,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
         agent,
         opts.controlUiPort || null,
         gpuPassthrough,
+        hermesToolGateways,
       );
       webSearchConfig = nextWebSearchConfig;
       // Persist model and provider after the sandbox entry exists in the registry.
@@ -10470,6 +10584,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
       registry.updateSandbox(sandboxName, {
         model,
         provider,
+        hermesToolGateways,
         ...getSandboxAgentRegistryFields(agent, !fromDockerfile),
       });
       registry.setDefault(sandboxName);
@@ -10481,6 +10596,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
           model,
           nimContainer,
           webSearchConfig,
+          hermesToolGateways,
           messagingChannelConfig,
         }),
       );
@@ -10529,9 +10645,14 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
     }
 
     const latestSession = onboardSession.loadSession();
-    const recordedPolicyPresets = Array.isArray(latestSession?.policyPresets)
+    const rawRecordedPolicyPresets = Array.isArray(latestSession?.policyPresets)
       ? latestSession.policyPresets
       : null;
+    const recordedPolicyPresets =
+      provider === hermesProviderAuth.HERMES_PROVIDER_NAME &&
+      normalizeHermesAuthMethod(hermesAuthMethod) === HERMES_AUTH_METHOD_API_KEY
+        ? removeHermesToolGatewayPresets(rawRecordedPolicyPresets)
+        : rawRecordedPolicyPresets;
     const recordedMessagingChannels = Array.isArray(latestSession?.messagingChannels)
       ? latestSession.messagingChannels
       : [];
@@ -10575,6 +10696,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
             ? selectedMessagingChannels
             : recordedMessagingChannels,
         webSearchConfig,
+        hermesToolGateways,
         provider,
         onSelection: (policyPresets) => {
           onboardSession.updateSession((current: Session) => {
@@ -10585,7 +10707,13 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
       });
       onboardSession.markStepComplete(
         "policies",
-        toSessionUpdates({ sandboxName, provider, model, policyPresets: appliedPolicyPresets }),
+        toSessionUpdates({
+          sandboxName,
+          provider,
+          model,
+          hermesToolGateways,
+          policyPresets: appliedPolicyPresets,
+        }),
       );
     }
 
@@ -10594,7 +10722,7 @@ async function onboard(opts: OnboardOptions = {}): Promise<void> {
     }
 
     onboardSession.completeSession(
-      toSessionUpdates({ sandboxName, provider, model, hermesAuthMethod }),
+      toSessionUpdates({ sandboxName, provider, model, hermesAuthMethod, hermesToolGateways }),
     );
     completed = true;
     // Onboarding finished successfully. Delete the legacy plaintext

@@ -41,6 +41,7 @@ RUN chmod -R a+rX /opt/nemoclaw-hermes-plugin/
 # Copy config generator and URL-decode proxy
 COPY agents/hermes/generate-config.ts /opt/nemoclaw-hermes-config/generate-config.ts
 COPY agents/hermes/config/ /opt/nemoclaw-hermes-config/config/
+COPY scripts/hermes-managed-tool-gateway-matrix.json /opt/nemoclaw-hermes-config/hermes-managed-tool-gateway-matrix.json
 RUN find /opt/nemoclaw-hermes-config -type d -exec chmod 755 {} + \
     && find /opt/nemoclaw-hermes-config -type f -exec chmod 444 {} +
 COPY agents/hermes/decode-proxy.py /usr/local/bin/nemoclaw-decode-proxy
@@ -59,7 +60,9 @@ RUN chmod 755 /usr/local/bin/nemoclaw-start /usr/local/lib/nemoclaw/sandbox-init
 # Build args for config that varies per deployment.
 ARG NEMOCLAW_MODEL=nvidia/nemotron-3-super-120b-a12b
 ARG NEMOCLAW_PROVIDER_KEY=custom
+ARG NEMOCLAW_PRIMARY_MODEL_REF=inference/claude-opus-4-7
 ARG NEMOCLAW_INFERENCE_BASE_URL=https://inference.local/v1
+ARG NEMOCLAW_INFERENCE_API=openai-completions
 # CHAT_UI_URL is a legacy name shared with the OpenClaw build arg. For
 # Hermes this URL points at the OpenAI-compatible API server (port 8642,
 # exposing /v1 and /health), NOT a browser chat UI. Callers authenticate
@@ -70,17 +73,23 @@ ARG NEMOCLAW_MESSAGING_CHANNELS_B64=W10=
 ARG NEMOCLAW_MESSAGING_ALLOWED_IDS_B64=e30=
 ARG NEMOCLAW_DISCORD_GUILDS_B64=e30=
 ARG NEMOCLAW_TELEGRAM_CONFIG_B64=e30=
+ARG NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64=W10=
+ARG NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER=0
 ARG NEMOCLAW_BUILD_ID=default
 
 # Promote build-args to env vars for the config generation script.
 ENV NEMOCLAW_MODEL=${NEMOCLAW_MODEL} \
     NEMOCLAW_PROVIDER_KEY=${NEMOCLAW_PROVIDER_KEY} \
+    NEMOCLAW_PRIMARY_MODEL_REF=${NEMOCLAW_PRIMARY_MODEL_REF} \
     NEMOCLAW_INFERENCE_BASE_URL=${NEMOCLAW_INFERENCE_BASE_URL} \
+    NEMOCLAW_INFERENCE_API=${NEMOCLAW_INFERENCE_API} \
     CHAT_UI_URL=${CHAT_UI_URL} \
     NEMOCLAW_MESSAGING_CHANNELS_B64=${NEMOCLAW_MESSAGING_CHANNELS_B64} \
     NEMOCLAW_MESSAGING_ALLOWED_IDS_B64=${NEMOCLAW_MESSAGING_ALLOWED_IDS_B64} \
     NEMOCLAW_DISCORD_GUILDS_B64=${NEMOCLAW_DISCORD_GUILDS_B64} \
-    NEMOCLAW_TELEGRAM_CONFIG_B64=${NEMOCLAW_TELEGRAM_CONFIG_B64}
+    NEMOCLAW_TELEGRAM_CONFIG_B64=${NEMOCLAW_TELEGRAM_CONFIG_B64} \
+    NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64=${NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64} \
+    NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER=${NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER}
 
 WORKDIR /sandbox
 USER sandbox

@@ -14,8 +14,8 @@ import { isErrnoException } from "../core/errno";
 import type { JsonObject, JsonValue } from "../core/json-types";
 import type { WebSearchConfig } from "../inference/web-search";
 import {
-  sanitizeMessagingChannelConfig,
   type MessagingChannelConfig,
+  sanitizeMessagingChannelConfig,
 } from "../messaging-channel-config";
 import { redactSensitiveText, redactUrl } from "../security/redact";
 
@@ -82,6 +82,7 @@ export interface Session {
   routerCredentialHash: string | null;
   webSearchConfig: WebSearchConfig | null;
   policyPresets: string[] | null;
+  hermesToolGateways: string[] | null;
   messagingChannels: string[] | null;
   messagingChannelConfig: MessagingChannelConfig | null;
   // SHA-256 hex digest of every legacy credential value successfully
@@ -134,6 +135,7 @@ export interface SessionUpdates {
   routerCredentialHash?: string;
   webSearchConfig?: WebSearchConfig | null;
   policyPresets?: string[];
+  hermesToolGateways?: string[];
   messagingChannels?: string[];
   messagingChannelConfig?: MessagingChannelConfig | null;
   migratedLegacyValueHashes?: Record<string, string>;
@@ -159,6 +161,7 @@ export interface DebugSessionSummary {
   preferredInferenceApi: string | null;
   nimContainer: string | null;
   policyPresets: string[] | null;
+  hermesToolGateways: string[] | null;
   gpuPassthrough: boolean;
   lastStepStarted: string | null;
   lastCompletedStep: string | null;
@@ -319,6 +322,7 @@ export function createSession(overrides: Partial<Session> = {}): Session {
     webSearchConfig:
       overrides.webSearchConfig?.fetchEnabled === true ? { fetchEnabled: true } : null,
     policyPresets: readStringArray(overrides.policyPresets),
+    hermesToolGateways: readStringArray(overrides.hermesToolGateways),
     messagingChannels: readStringArray(overrides.messagingChannels),
     messagingChannelConfig: sanitizeMessagingChannelConfig(overrides.messagingChannelConfig),
     migratedLegacyValueHashes: overrides.migratedLegacyValueHashes
@@ -358,6 +362,7 @@ export function normalizeSession(data: Session | SessionJsonValue | undefined): 
     routerCredentialHash: readString(data.routerCredentialHash),
     webSearchConfig: parseWebSearchConfig(data.webSearchConfig),
     policyPresets: readStringArray(data.policyPresets),
+    hermesToolGateways: readStringArray(data.hermesToolGateways),
     messagingChannels: readStringArray(data.messagingChannels),
     messagingChannelConfig: sanitizeMessagingChannelConfig(data.messagingChannelConfig),
     migratedLegacyValueHashes: readStringRecord(data.migratedLegacyValueHashes),
@@ -732,6 +737,11 @@ export function filterSafeUpdates(updates: SessionUpdates): Partial<Session> {
   if (Array.isArray(updates.policyPresets)) {
     safe.policyPresets = updates.policyPresets.filter((value) => typeof value === "string");
   }
+  if (Array.isArray(updates.hermesToolGateways)) {
+    safe.hermesToolGateways = updates.hermesToolGateways.filter(
+      (value) => typeof value === "string",
+    );
+  }
   if (Array.isArray(updates.messagingChannels)) {
     safe.messagingChannels = updates.messagingChannels.filter((value) => typeof value === "string");
   }
@@ -864,6 +874,7 @@ export function summarizeForDebug(
     preferredInferenceApi: session.preferredInferenceApi,
     nimContainer: session.nimContainer,
     policyPresets: session.policyPresets,
+    hermesToolGateways: session.hermesToolGateways,
     gpuPassthrough: session.gpuPassthrough,
     lastStepStarted: session.lastStepStarted,
     lastCompletedStep: session.lastCompletedStep,

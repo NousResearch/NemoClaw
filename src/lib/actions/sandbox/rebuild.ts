@@ -467,6 +467,18 @@ export async function rebuildSandbox(
     sessionMatchesSandbox ? sessionBefore?.messagingChannelConfig ?? null : null;
   const rebuildMessagingChannelConfig =
     sb.messagingChannelConfig ?? sessionMessagingChannelConfig ?? null;
+  const registryHermesToolGateways = Array.isArray(sb.hermesToolGateways)
+    ? sb.hermesToolGateways.filter(
+        (value: unknown): value is string => typeof value === "string",
+      )
+    : null;
+  const sessionHermesToolGateways =
+    sessionMatchesSandbox && Array.isArray(sessionBefore?.hermesToolGateways)
+      ? sessionBefore.hermesToolGateways.filter(
+          (value: unknown): value is string => typeof value === "string",
+        )
+      : null;
+  const rebuildHermesToolGateways = registryHermesToolGateways ?? sessionHermesToolGateways ?? [];
   const hasRebuildMessagingChannels =
     registryMessagingChannels !== null || sessionMessagingChannels !== null;
   log(
@@ -484,6 +496,7 @@ export async function rebuildSandbox(
     s.agent = rebuildAgent;
     s.messagingChannels = rebuildMessagingChannels;
     s.messagingChannelConfig = rebuildMessagingChannelConfig;
+    s.hermesToolGateways = rebuildHermesToolGateways;
     // Persist inference selection from the about-to-be-removed registry entry
     // so onboard --resume can recreate with the same provider/model in
     // non-interactive mode. Without this the registry is gone by the time
@@ -609,6 +622,9 @@ export async function rebuildSandbox(
 
   const preservedRegistryFields = {
     ...(hasRebuildMessagingChannels ? { messagingChannels: [...rebuildMessagingChannels] } : {}),
+    ...(rebuildHermesToolGateways.length > 0
+      ? { hermesToolGateways: [...rebuildHermesToolGateways] }
+      : {}),
     ...(Array.isArray(sb.disabledChannels) && sb.disabledChannels.length > 0
       ? { disabledChannels: [...sb.disabledChannels] }
       : {}),

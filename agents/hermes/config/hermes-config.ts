@@ -2,14 +2,29 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { HermesBuildSettings } from "./build-env.ts";
+import {
+  applyManagedToolConfig,
+  loadManagedToolGatewayMatrix,
+} from "./managed-tool-gateway.ts";
 import { buildDiscordConfig } from "./messaging-config.ts";
+
+export function mapHermesProvider(providerKey: string): string {
+  switch (providerKey) {
+    case "anthropic":
+      return "anthropic";
+    case "openai":
+      return "openai";
+    default:
+      return "custom";
+  }
+}
 
 export function buildHermesConfig(settings: HermesBuildSettings): Record<string, unknown> {
   const config: Record<string, unknown> = {
     _config_version: 12,
     model: {
       default: settings.model,
-      provider: "custom",
+      provider: mapHermesProvider(settings.providerKey),
       base_url: settings.baseUrl,
     },
     terminal: {
@@ -48,6 +63,16 @@ export function buildHermesConfig(settings: HermesBuildSettings): Record<string,
     config.telegram = {
       require_mention: telegramConfig.requireMention,
     };
+  }
+
+  if (settings.toolGatewayPresets.length > 0) {
+    const matrix = loadManagedToolGatewayMatrix();
+    for (const preset of settings.toolGatewayPresets) {
+      const entry = matrix[preset];
+      if (entry) {
+        applyManagedToolConfig(config, entry.config);
+      }
+    }
   }
 
   // API server — internal port only.

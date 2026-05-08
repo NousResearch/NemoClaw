@@ -3,10 +3,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
-
-import { ensureConfigDir, readConfigFile, writeConfigFile } from "./config-io";
 import { isErrnoException } from "../core/errno";
+import type { JsonObject } from "../core/json-types";
 import type { MessagingChannelConfig } from "../messaging-channel-config";
+import { ensureConfigDir, readConfigFile, writeConfigFile } from "./config-io";
 
 export interface CustomPolicyEntry {
   name: string;
@@ -31,6 +31,8 @@ export interface SandboxEntry {
   providerCredentialHashes?: Record<string, string>;
   messagingChannels?: string[];
   messagingChannelConfig?: MessagingChannelConfig;
+  messagingBridgeConfig?: JsonObject;
+  hermesToolGateways?: string[];
   disabledChannels?: string[];
   dashboardPort?: number | null;
 }
@@ -202,6 +204,13 @@ export function registerSandbox(entry: SandboxEntry): void {
         entry.messagingChannelConfig && Object.keys(entry.messagingChannelConfig).length > 0
           ? { ...entry.messagingChannelConfig }
           : undefined,
+      messagingBridgeConfig:
+        entry.messagingBridgeConfig && Object.keys(entry.messagingBridgeConfig).length > 0
+          ? { ...entry.messagingBridgeConfig }
+          : undefined,
+      hermesToolGateways: Array.isArray(entry.hermesToolGateways)
+        ? [...entry.hermesToolGateways]
+        : undefined,
       disabledChannels:
         Array.isArray(entry.disabledChannels) && entry.disabledChannels.length > 0
           ? [...entry.disabledChannels]
