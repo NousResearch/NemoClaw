@@ -37,6 +37,24 @@ process:
   run_as_group: sandbox
 
 network_policies:
+  managed_inference:
+    name: managed_inference
+    endpoints:
+      - host: inference.local
+        port: 443
+        protocol: rest
+        enforcement: enforce
+        rules:
+          - allow: { method: GET, path: "/**" }
+          - allow: { method: POST, path: "/**" }
+    binaries:
+      - { path: /usr/local/bin/hermes }
+      - { path: /usr/bin/python3 }
+      - { path: /usr/bin/python3.11 }
+      - { path: /opt/hermes/.venv/bin/python }
+      - { path: /usr/bin/curl }
+      - { path: /usr/local/bin/curl }
+
   nvidia:
     name: nvidia
     endpoints:
@@ -79,7 +97,13 @@ network_policies:
       - { path: /usr/bin/git }
       - { path: /opt/hermes/.venv/bin/python }
 
-  # ── Nous Research — Hermes auth, updates, portal ──────────────
+  # ── Nous Research — public metadata only ─────────────────────
+  # Hermes Provider auth, agent-key minting, and managed-tool OAuth refresh
+  # are host-managed by NemoClaw. The sandbox reaches inference through
+  # https://inference.local/v1 and managed tools through the host broker at
+  # host.openshell.internal:11436. Do not allow direct sandbox egress to
+  # portal.nousresearch.com, inference-api.nousresearch.com, or vendor gateway
+  # hosts here.
   nous_research:
     name: nous_research
     endpoints:
@@ -91,62 +115,6 @@ network_policies:
           - allow: { method: GET, path: "/**" }
           - allow: { method: POST, path: "/**" }
       - host: hermes-agent.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: inference-api.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: portal.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: browser-use-gateway.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: modal-gateway.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: openai-audio-gateway.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: fal-queue-gateway.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: firecrawl-gateway.nousresearch.com
-        port: 443
-        protocol: rest
-        enforcement: enforce
-        rules:
-          - allow: { method: GET, path: "/**" }
-          - allow: { method: POST, path: "/**" }
-      - host: tool-gateway.nousresearch.com
         port: 443
         protocol: rest
         enforcement: enforce

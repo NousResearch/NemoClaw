@@ -50,3 +50,5 @@ export const VLLM_PORT = parsePort("NEMOCLAW_VLLM_PORT", 8000);
 export const OLLAMA_PORT = parsePort("NEMOCLAW_OLLAMA_PORT", 11434);
 /** Ollama auth proxy port (default 11435, override via NEMOCLAW_OLLAMA_PROXY_PORT). */
 export const OLLAMA_PROXY_PORT = parsePort("NEMOCLAW_OLLAMA_PROXY_PORT", 11435);
+/** Hermes managed-tool host broker port (default 11436, override via NEMOCLAW_HERMES_TOOL_GATEWAY_PORT). */
+export const HERMES_TOOL_GATEWAY_PORT = parsePort("NEMOCLAW_HERMES_TOOL_GATEWAY_PORT", 11436);

@@ -22,6 +22,8 @@ export type HermesBuildSettings = {
   baseUrl: string;
   providerKey: string;
   inferenceApi: string;
+  toolGatewayPresets: string[];
+  toolGatewayBrokerEnabled: boolean;
   messaging: {
     enabledChannels: Set<string>;
     allowedIds: MessagingAllowedIds;
@@ -39,6 +41,12 @@ export function readHermesBuildSettings(env: NodeJS.ProcessEnv): HermesBuildSett
     baseUrl,
     providerKey: env.NEMOCLAW_PROVIDER_KEY || "custom",
     inferenceApi: env.NEMOCLAW_INFERENCE_API || "",
+    toolGatewayPresets: readBase64Json<string[]>(
+      env,
+      "NEMOCLAW_HERMES_TOOL_GATEWAY_PRESETS_B64",
+      "W10=",
+    ),
+    toolGatewayBrokerEnabled: env.NEMOCLAW_HERMES_TOOL_GATEWAY_BROKER === "1",
     messaging: {
       enabledChannels: new Set(
         readBase64Json<string[]>(env, "NEMOCLAW_MESSAGING_CHANNELS_B64", "W10="),

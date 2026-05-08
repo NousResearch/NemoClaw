@@ -130,9 +130,9 @@ selectFromList(items, options)
 
 describe("policies", () => {
   describe("listPresets", () => {
-    it("returns all 12 presets", () => {
+    it("returns all 17 presets", () => {
       const presets = policies.listPresets();
-      expect(presets.length).toBe(12);
+      expect(presets.length).toBe(17);
     });
 
     it("each preset has name and description", () => {
@@ -155,6 +155,11 @@ describe("policies", () => {
         "huggingface",
         "jira",
         "local-inference",
+        "nous-audio",
+        "nous-browser",
+        "nous-code",
+        "nous-image",
+        "nous-web",
         "npm",
         "outlook",
         "pypi",

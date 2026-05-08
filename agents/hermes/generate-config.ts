@@ -41,10 +41,15 @@ function main(): void {
     settings.messaging.enabledChannels,
     settings.messaging.allowedIds,
     settings.messaging.discordGuilds,
+    settings.providerKey,
+    settings.toolGatewayPresets,
+    settings.toolGatewayBrokerEnabled,
   );
   const written = writeHermesConfigFiles(config, envLines);
 
-  console.log(`[config] Wrote ${written.configPath} (model=${settings.model}, provider=custom)`);
+  console.log(
+    `[config] Wrote ${written.configPath} (model=${settings.model}, provider=${String((config.model as Record<string, unknown>).provider)})`,
+  );
   console.log(`[config] Wrote ${written.envPath} (${written.envEntryCount} entries)`);
 }
 
